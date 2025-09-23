@@ -1,28 +1,25 @@
-<!doctype html><html lang="th"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Login | Equip Manager V2.3</title>
-<link href="assets/style.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-
-<script src="js/config.js?v=4"></script>
-<script src="js/app.js?v=4"></script>
 <script>
-  // ตรวจว่าฟังก์ชันมาแล้วจริง
-  console.log('[index] typeof api:', typeof api, 'typeof getToken:', typeof getToken);
-  async function handleLogin(ev){
-    ev.preventDefault();
-    const u = document.getElementById('user').value.trim();
-    const p = document.getElementById('pass').value;
-    try {
-      const res = await api('login', { username: u, password: p });
-      if (!res || !res.ok) throw new Error(res && res.error || 'เข้าสู่ระบบไม่สำเร็จ');
-      const t = res.data && res.data.token;
-      if (!t) throw new Error('ไม่พบ token จากเซิร์ฟเวอร์');
-      setToken(t);
-      window.location.href = 'home.html';
-    } catch (e) { alert(e.message || String(e)); }
-  }
+async function handleLogin(ev){
+  ev.preventDefault();
+  const u = document.getElementById('user').value.trim();
+  const p = document.getElementById('pass').value;
+
+  try {
+    const res = await api('login', { username: u, password: p });
+    if (!res || !res.ok) throw new Error(res && res.error || 'เข้าสู่ระบบไม่สำเร็จ');
+
+    const t = res.data && res.data.token;
+    if (!t) throw new Error('ไม่พบ token จากเซิร์ฟเวอร์');
+
+    setToken(t);
+    // เก็บ session สำหรับเมนู/ส่วนหัว
+    setSession({ user: res.data.user, role: res.data.role, fullname: res.data.user });
+
+    window.location.href = 'home.html';
+  } catch (e) { alert(e.message || String(e)); }
+}
 </script>
+
 
 
 <div class="login-wrap">
