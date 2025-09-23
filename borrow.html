@@ -1,9 +1,133 @@
-<!doctype html><html lang='th'><head><title>สแกนยืม | Equip V2.3</title><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link href="assets/style.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-<script src="js/config.js"></script><script src="js/app.js"></script><script src="js/sidebar.js"></script>
-<script>document.addEventListener('DOMContentLoaded',function(){ requireLogin(null); renderSidebar(); });</script></head><body><div class='container'><aside class='sidebar'></aside><main class='main'><div class='topbar'><div class='left'><button class='btn hamburger'><span class='material-symbols-outlined'>menu</span></button><strong>สแกนยืม</strong></div><div class='user-info'>...</div></div><div class='content'>
-<div class='card'><div id='reader' style='width:100%;max-width:520px'></div><p class='small'>หรือกรอก QR data ด้านล่าง</p>
-<form id='manual'><div class='input'><label>QR Data</label><input id='qrdata' placeholder='{"type":"EQUIP","id":"EQ123"}'></div><button class='btn primary' type='submit'>ยืม</button></form></div>
-<script src='https://unpkg.com/html5-qrcode@2.3.10/minified/html5-qrcode.min.js'></script><script src='js/borrow.js'></script>
-</div></main></div></body></html>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>สแกนยืม | Equip V2.3</title>
+
+  <link href="assets/style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <script src="js/config.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
+  <script src="js/sidebar.js?v=4"></script>
+
+  <!-- fallback library ถ้าเบราว์เซอร์ไม่มี BarcodeDetector -->
+  <script defer src="https://unpkg.com/html5-qrcode"></script>
+
+  <style>
+    .scan-wrap{display:grid;gap:12px}
+    #qr-reader{width:320px;max-width:100%;margin:auto;border-radius:12px;overflow:hidden}
+    .scan-result{background:var(--panel);border:1px solid var(--stroke);border-radius:12px;padding:12px;word-break:break-all}
+  </style>
+
+  <script>
+    let stopScan = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      requireLogin(null);
+      renderSidebar();
+      startScanner();
+    });
+
+    async function startScanner(){
+      const target = document.getElementById('qr-reader');
+
+      if ('BarcodeDetector' in window) {
+        // ใช้ API เนทีฟ (Chrome/Edge/Android)
+        const detector = new BarcodeDetector({ formats: ['qr_code'] });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        const video = document.createElement('video');
+        video.playsInline = true; video.srcObject = stream; await video.play();
+        target.innerHTML = ''; target.appendChild(video);
+
+        let live = true;
+        stopScan = () => { live=false; stream.getTracks().forEach(t=>t.stop()); };
+
+        async function loop(){
+          if (!live) return;
+          try{
+            const bmp = await createImageBitmap(video);
+            const codes = await detector.detect(bmp);
+            bmp.close();
+            if (codes && codes.length){
+              onDecoded(codes[0].rawValue);
+              stopScan();
+              return;
+            }
+          }catch(e){}
+          requestAnimationFrame(loop);
+        }
+        loop();
+      } else if (window.Html5QrcodeScanner) {
+        // fallback library
+        const scanner = new Html5QrcodeScanner('qr-reader', { fps: 10, qrbox: 240 }, false);
+        scanner.render((txt) => {
+          onDecoded(txt);
+          scanner.clear();
+        }, (err) => {/* ignore */});
+        stopScan = () => scanner.clear();
+      } else {
+        target.innerHTML = '<p class="small">เบราว์เซอร์ไม่รองรับการสแกน ใช้ช่องกรอกชั่วคราวด้านล่าง</p>';
+        document.getElementById('manual').style.display = 'block';
+      }
+    }
+
+    async function onDecoded(text){
+      // คาดว่า QR บรรจุ JSON: {"type":"EQUIP","id":"EQ123"}
+      let data = null;
+      try{ data = JSON.parse(text); }catch(e){ data = { id: String(text||'').trim() }; }
+
+      document.getElementById('result').textContent = text;
+
+      // เรียกยืมจากรหัส (ปรับ action ให้ตรง backend ของคุณ)
+      // ตัวอย่าง: 'borrow_by_qr' หรือ 'borrow'
+      const res = await api('borrow_by_qr', { id: data.id, raw:text });
+      if (res.ok){
+        alert('ยืมสำเร็จ: ' + data.id);
+        // TODO: อัปเดต badge/รายการในหน้าได้ตามต้องการ
+      }else{
+        alert(res.error || 'ยืมไม่สำเร็จ');
+      }
+    }
+
+    function stopScannerNow(){ if (typeof stopScan === 'function') stopScan(); }
+    async function borrowManual(){
+      const t = document.getElementById('qrData').value.trim();
+      if (!t) return;
+      await onDecoded(t);
+    }
+  </script>
+</head>
+<body>
+<div class="container">
+  <aside class="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="left">
+        <button class="btn hamburger"><span class="material-symbols-outlined">menu</span></button>
+        <strong>สแกนยืม</strong>
+      </div>
+      <div class="user-info">...</div>
+    </div>
+
+    <div class="content">
+      <div class="card scan-wrap">
+        <div id="qr-reader"></div>
+        <div class="scan-result">
+          <div class="small">ผลลัพธ์ล่าสุด</div>
+          <div id="result">–</div>
+        </div>
+        <div id="manual" style="display:none">
+          <div class="input">
+            <label>กรอก QR data ชั่วคราว (กรณีเครื่องไม่รองรับกล้อง)</label>
+            <input id="qrData" placeholder='{"type":"EQUIP","id":"EQ123"}'>
+          </div>
+          <button class="btn" onclick="borrowManual()">ยืม</button>
+        </div>
+        <div><button class="btn ghost" onclick="stopScannerNow()">หยุดกล้อง</button></div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
