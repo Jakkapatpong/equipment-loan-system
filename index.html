@@ -3,26 +3,25 @@
 <title>Login | Equip Manager V2.3</title>
 <link href="assets/style.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-<script src="js/config.js"></script><script src="js/app.js"></script>
+
+<script src="js/config.js?v=4"></script>
+<script src="js/app.js?v=4"></script>
 <script>
-async function handleLogin(ev){
-  ev.preventDefault();
-  const u = document.getElementById('user').value.trim();
-  const p = document.getElementById('pass').value;
-
-  try {
-    const res = await api('login', { username: u, password: p });
-    if (!res || !res.ok) throw new Error(res && res.error || 'เข้าสู่ระบบไม่สำเร็จ');
-
-    const t = res.data && res.data.token;
-    if (!t) throw new Error('ไม่พบ token จากเซิร์ฟเวอร์');
-
-    setToken(t);                   // ✅ ใช้ helper ที่เราประกาศใน app.js
-    window.location.href = 'home.html';
-  } catch (e) {
-    alert(e.message || String(e));
+  // ตรวจว่าฟังก์ชันมาแล้วจริง
+  console.log('[index] typeof api:', typeof api, 'typeof getToken:', typeof getToken);
+  async function handleLogin(ev){
+    ev.preventDefault();
+    const u = document.getElementById('user').value.trim();
+    const p = document.getElementById('pass').value;
+    try {
+      const res = await api('login', { username: u, password: p });
+      if (!res || !res.ok) throw new Error(res && res.error || 'เข้าสู่ระบบไม่สำเร็จ');
+      const t = res.data && res.data.token;
+      if (!t) throw new Error('ไม่พบ token จากเซิร์ฟเวอร์');
+      setToken(t);
+      window.location.href = 'home.html';
+    } catch (e) { alert(e.message || String(e)); }
   }
-}
 </script>
 
 
