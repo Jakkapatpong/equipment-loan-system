@@ -1,28 +1,60 @@
-function renderSidebar(){const t=storage.getToken();const role=t?.role||'user';const el=document.querySelector('.sidebar');if(!el)return;el.innerHTML=`
-<div class="brand"><span class="material-symbols-outlined">qr_code_scanner</span> Equip Manager V2.3</div>
-<div class="menu">
-  <div class="section"><button><span class="material-symbols-outlined">home</span> หน้าแรก</button><div class="tabs"><a href="home.html"><span class="material-symbols-outlined">dashboard</span> Homepage</a></div></div>
-  ${(role==='admin'||role==='dev')?`
-  <div class="section"><button><span class="material-symbols-outlined">inventory_2</span> อุปกรณ์</button><div class="tabs">
-    <a href="add-equipment.html"><span class="material-symbols-outlined">add_circle</span> เพิ่มอุปกรณ์</a>
-    <a href="equipment-list.html"><span class="material-symbols-outlined">list</span> รายการอุปกรณ์</a>
-    <a href="available.html"><span class="material-symbols-outlined">task_alt</span> อุปกรณ์ที่ว่าง</a>
-    <a href="print-qr.html"><span class="material-symbols-outlined">print</span> พิมพ์ QR</a>
-  </div></div>`:''}
-  <div class="section"><button><span class="material-symbols-outlined">qr_code_scanner</span> การยืม</button><div class="tabs">
-    <a href="borrow.html"><span class="material-symbols-outlined">qr_code_scanner</span> สแกนยืม</a>
-    <a href="my-borrows.html"><span class="material-symbols-outlined">person</span> ของฉัน</a>
-    ${(role==='admin'||role==='dev')?`<a href="all-borrows.html"><span class="material-symbols-outlined">groups</span> ทั้งหมด</a>`:''}
-  </div></div>
-  <div class="section"><button><span class="material-symbols-outlined">monitoring</span> รายงาน</button><div class="tabs">
-    <a href="reports.html"><span class="material-symbols-outlined">summarize</span> ประวัติ/รายงาน</a>
-  </div></div>
-  ${(role==='admin'||role==='dev')?`
-  <div class="section"><button><span class="material-symbols-outlined">manage_accounts</span> ผู้ใช้</button><div class="tabs">
-    <a href="users.html"><span class="material-symbols-outlined">person_add</span> สร้าง/จัดการผู้ใช้</a>
-  </div></div>`:''}
-  <div class="section"><button><span class="material-symbols-outlined">account_circle</span> โปรไฟล์</button><div class="tabs">
-    <a href="profile.html"><span class="material-symbols-outlined">account_circle</span> โปรไฟล์ของฉัน</a>
-  </div></div>
-  <div class="section"><div class="tabs" style="display:block"><a href="#" onclick="logout()"><span class="material-symbols-outlined">logout</span> ออกจากระบบ</a></div></div>
-</div>`; initSidebar();}
+(function(){
+  const MENU = {
+    user: [
+      { href:'home.html',           icon:'home',              text:'หน้าแรก' },
+      { href:'borrow.html',         icon:'qr_code_scanner',   text:'สแกนยืม' },
+      { href:'my-borrows.html',     icon:'person',            text:'ของฉัน' },
+      { href:'profile.html',        icon:'account_circle',    text:'โปรไฟล์' },
+    ],
+    admin: [
+      { href:'home.html',           icon:'home',              text:'หน้าแรก' },
+      { href:'add-equipment.html',  icon:'add',               text:'เพิ่มอุปกรณ์' },
+      { href:'equipment-list.html', icon:'inventory_2',       text:'รายการอุปกรณ์' },
+      { href:'available.html',      icon:'check_circle',      text:'อุปกรณ์ที่ว่าง' },
+      { href:'all-borrows.html',    icon:'list',              text:'ยืมทั้งหมด' },
+      { href:'reports.html',        icon:'bar_chart',         text:'รายงาน' },
+      { href:'users.html',          icon:'group',             text:'ผู้ใช้' },
+      { href:'profile.html',        icon:'account_circle',    text:'โปรไฟล์' },
+    ],
+    dev: [
+      // dev เข้าทุกหน้า = เหมือน admin + อนาคตเพิ่มหน้า dev-only ได้
+      { href:'home.html',           icon:'home',              text:'หน้าแรก' },
+      { href:'add-equipment.html',  icon:'add',               text:'เพิ่มอุปกรณ์' },
+      { href:'equipment-list.html', icon:'inventory_2',       text:'รายการอุปกรณ์' },
+      { href:'print-qr.html',       icon:'print',             text:'พิมพ์ QR' },
+      { href:'borrow.html',         icon:'qr_code_scanner',   text:'สแกนยืม' },
+      { href:'my-borrows.html',     icon:'person',            text:'ของฉัน' },
+      { href:'all-borrows.html',    icon:'list',              text:'ยืมทั้งหมด' },
+      { href:'available.html',      icon:'check_circle',      text:'อุปกรณ์ที่ว่าง' },
+      { href:'reports.html',        icon:'bar_chart',         text:'รายงาน' },
+      { href:'users.html',          icon:'group',             text:'ผู้ใช้' },
+      { href:'profile.html',        icon:'account_circle',    text:'โปรไฟล์' },
+    ]
+  };
+
+  window.renderSidebar = function(){
+    const s  = (typeof getSession==='function') ? getSession() : {};
+    const r  = (s.role || 'user').toLowerCase();
+    const el = document.querySelector('.sidebar');
+    if (!el) return;
+
+    const items = MENU[r] || MENU.user;
+    const cur   = location.pathname.split('/').pop() || 'home.html';
+
+    el.innerHTML = `
+      <div class="logo">Equip Manager</div>
+      <nav class="nav">
+        ${items.map(it => `
+          <a class="nav-item ${cur===it.href?'active':''}" href="${it.href}">
+            <span class="material-symbols-outlined">${it.icon}</span>
+            <span>${it.text}</span>
+          </a>`).join('')}
+        <div class="nav-item" onclick="logout()">
+          <span class="material-symbols-outlined">logout</span><span>ออกจากระบบ</span>
+        </div>
+      </nav>`;
+    // ปุ่มแฮมเบอร์เกอร์
+    const ham = document.querySelector('.hamburger');
+    if (ham) ham.onclick = () => document.body.classList.toggle('sidebar-open');
+  };
+})();
