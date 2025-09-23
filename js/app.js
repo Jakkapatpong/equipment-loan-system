@@ -1,6 +1,9 @@
-const storage={get k(){return 'equip.v2.token'},saveToken(t){localStorage.setItem(this.k,JSON.stringify(t))},getToken(){try{return JSON.parse(localStorage.getItem(this.k))}catch(e){return null}},clear(){localStorage.removeItem(this.k)}};
-async function api(a,d){d=d||{};const tok=storage.getToken()?.token;const r=await fetch(API_BASE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({action:a,token:tok},d))});const j=await r.json();if(!j.ok)throw new Error(j.error||'API error');return j.data}
-function requireLogin(roles){const t=storage.getToken();if(!t){location.href='index.html';return}if(roles&&roles.indexOf(t.role)===-1){alert('ไม่มีสิทธิ์เข้าถึงหน้านี้');location.href='home.html';return}document.querySelectorAll('.user-info').forEach(el=>el.textContent=t.user+' · '+t.role)}
-function logout(){storage.clear();location.href='index.html'}
-function fmtDate(d){const x=new Date(d);return isNaN(x)?(d||''):x.toLocaleString()}
-function initSidebar(){const s=document.querySelector('.sidebar');const h=document.querySelector('.hamburger');h&&h.addEventListener('click',()=>s.classList.toggle('open'));document.querySelectorAll('.menu .section > button').forEach(b=>b.addEventListener('click',()=>{const t=b.parentElement.querySelector('.tabs');t.style.display=t.style.display==='block'?'none':'block'}))}
+async function api(action, payload = {}) {
+  const form = new URLSearchParams();
+  form.append("data", JSON.stringify({ action, token: getToken(), payload }));
+  const res = await fetch(API_BASE, {
+    method: "POST",
+    body: form // simple request เช่นกัน
+  });
+  return res.json();
+}
