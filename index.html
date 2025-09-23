@@ -16,13 +16,15 @@ async function handleLogin(ev){
 
     const t = res.data && res.data.token;
     if (!t) throw new Error('ไม่พบ token จากเซิร์ฟเวอร์');
-    localStorage.setItem('token', JSON.stringify(t));
+
+    setToken(t);                   // ✅ ใช้ helper ที่เราประกาศใน app.js
     window.location.href = 'home.html';
   } catch (e) {
     alert(e.message || String(e));
   }
 }
 </script>
+
 
 <div class="login-wrap">
   <div class="center"><div class="brand"><span class="material-symbols-outlined">qr_code_scanner</span> Equip Manager V2.3</div><p class="small">เข้าสู่ระบบ</p></div>
