@@ -1,5 +1,43 @@
-<!doctype html><html lang='th'><head><title>Homepage | Equip V2.3</title><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link href="assets/style.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-<script src="js/config.js"></script><script src="js/app.js"></script><script src="js/sidebar.js"></script>
-<script>document.addEventListener('DOMContentLoaded',function(){ requireLogin(null); renderSidebar(); });</script></head><body><div class='container'><aside class='sidebar'></aside><main class='main'><div class='topbar'><div class='left'><button class='btn hamburger'><span class='material-symbols-outlined'>menu</span></button><strong>Homepage</strong></div><div class='user-info'>...</div></div><div class='content'><div class='card'><h3>ยินดีต้อนรับ</h3><p class='small'>ใช้เมนูด้านซ้ายเพื่อเริ่มต้น</p></div></div></main></div></body></html>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Homepage | Equip V2.3</title>
+
+  <link href="assets/style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+  <script src="js/config.js?v=5"></script>
+  <script src="js/app.js?v=5"></script>
+  <script src="js/sidebar.js?v=3"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      requireLogin(null);   // ใส่ ['admin'] / ['dev'] ถ้าจะจำกัดสิทธิ์
+      renderSidebar();      // วาดเมนู + ผูก hamburger + overlay
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="left">
+          <button class="btn hamburger"><span class="material-symbols-outlined">menu</span></button>
+          <strong>Homepage</strong>
+        </div>
+        <div class="user-info">...</div>
+      </div>
+
+      <div class="content">
+        <div class="card">
+          <h3>ยินดีต้อนรับ</h3>
+          <p class="small">ใช้เมนูด้านซ้ายเพื่อเริ่มต้น</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
