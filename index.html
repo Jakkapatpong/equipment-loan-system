@@ -1,0 +1,19 @@
+<!doctype html><html lang="th"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Login | Equip Manager V2.3</title>
+<link href="assets/style.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<script src="js/config.js"></script><script src="js/app.js"></script>
+<script>
+async function handleLogin(ev){ev.preventDefault();const u=document.getElementById('user').value.trim();const p=document.getElementById('pass').value;
+try{const d=await api('login',{username:u,password:p}); storage.saveToken(d.token); window.location.href='home.html';}catch(e){alert(e.message);}}
+</script></head><body>
+<div class="login-wrap">
+  <div class="center"><div class="brand"><span class="material-symbols-outlined">qr_code_scanner</span> Equip Manager V2.3</div><p class="small">เข้าสู่ระบบ</p></div>
+  <form onsubmit="handleLogin(event)">
+    <div class="input"><label>ผู้ใช้</label><input id="user" required></div>
+    <div class="input"><label>รหัสผ่าน</label><input id="pass" type="password" required></div>
+    <div style="margin-top:12px;display:flex;gap:8px;"><button class="btn primary" type="submit">Login</button></div>
+  </form>
+</div>
+</body></html>

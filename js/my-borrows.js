@@ -1,0 +1,1 @@
+async function load(){const d=await api('listMyBorrows');const tb=document.querySelector('#tbl tbody');tb.innerHTML='';d.items.forEach(it=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${it.id}</td><td>${it.index}</td><td>${it.name}</td><td>${fmtDate(it.since)}</td>`;tb.appendChild(tr)});}document.addEventListener('DOMContentLoaded', load);

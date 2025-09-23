@@ -1,0 +1,22 @@
+<!doctype html><html lang='th'><head><title>สร้าง/จัดการผู้ใช้ | Equip V2.3</title><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link href="assets/style.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<script src="js/config.js"></script><script src="js/app.js"></script><script src="js/sidebar.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){ requireLogin(["admin", "dev"]); renderSidebar(); });</script></head><body><div class='container'><aside class='sidebar'></aside><main class='main'><div class='topbar'><div class='left'><button class='btn hamburger'><span class='material-symbols-outlined'>menu</span></button><strong>สร้าง/จัดการผู้ใช้</strong></div><div class='user-info'>...</div></div><div class='content'>
+<div class='card'><h3>สร้างผู้ใช้</h3>
+<form id='f'><div class='grid cols-3'>
+  <div class='input'><label>username</label><input id='user' required></div>
+  <div class='input'><label>password</label><input id='pass' type='password' required></div>
+  <div class='input'><label>ชื่อพนักงาน</label><input id='fullname'></div>
+  <div class='input'><label>แผนก</label><input id='dept'></div>
+  <div class='input'><label>ตำแหน่ง</label><input id='title'></div>
+  <div class='input'><label>รูปพนักงาน</label><input id='photo' type='file' accept='image/*'></div>
+  <div class='input'><label>สถานะในระบบ</label><select id='status'><option value='active'>active</option><option value='inactive'>inactive</option></select></div>
+  <div class='input'><label>role</label><select id='role'><option value='user'>user</option><option value='admin'>admin</option><option value='dev'>dev</option></select></div>
+</div><div style='margin-top:12px;'><button class='btn primary' type='submit'>สร้างผู้ใช้</button></div><p class='small' id='hint'></p></form></div>
+
+<div class='card'><h3>รายการผู้ใช้</h3>
+<table class='table' id='utbl'><thead><tr><th>id</th><th>user</th><th>ชื่อ</th><th>แผนก</th><th>ตำแหน่ง</th><th>role</th><th>สถานะ</th><th class='right'>จัดการ</th></tr></thead><tbody></tbody></table>
+</div>
+<script src='js/users.js'></script>
+</div></main></div></body></html>

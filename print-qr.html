@@ -1,0 +1,21 @@
+<!doctype html><html lang='th'><head><title>พิมพ์ QR | Equip V2.3</title><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link href="assets/style.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<script src="js/config.js"></script><script src="js/app.js"></script><script src="js/sidebar.js"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){ requireLogin(["admin", "dev"]); renderSidebar(); });</script></head><body><div class='container'><aside class='sidebar'></aside><main class='main'><div class='topbar'><div class='left'><button class='btn hamburger'><span class='material-symbols-outlined'>menu</span></button><strong>พิมพ์ QR</strong></div><div class='user-info'>...</div></div><div class='content'>
+<div class='card no-print'>
+  <form id='sel'>
+    <div class='input'><label>ใส่ ID อุปกรณ์ (เช่น EQXXXX)</label><input id='eid' placeholder='EQXXXX'><small class='small'>หรือใช้ปุ่ม <em>พิมพ์ QR</em> ในหน้า “รายการอุปกรณ์” เพื่อเปิดหน้านี้พร้อม ID</small></div>
+    <button class='btn' type='submit'>แสดง QR</button>
+  </form>
+</div>
+<div class='card'>
+  <div id='printArea' class='center'>
+    <h2 id='pname' class='print-only'></h2>
+    <img id='pqr' alt='QR' style='max-width:420px;margin:0 auto;'/>
+    <p id='pid'></p>
+  </div>
+  <div class='no-print' style='margin-top:12px;text-align:center'><button class='btn primary' id='printBtn'><span class='material-symbols-outlined'>print</span> พิมพ์</button></div>
+</div>
+<script src='js/print-qr.js'></script>
+</div></main></div></body></html>
