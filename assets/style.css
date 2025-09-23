@@ -86,37 +86,43 @@ img{max-width:100%;display:block}
 
 /* ====== Sidebar – สไตล์ใหม่ ====== */
 .sidebar{
-  width:260px;background:var(--panel);padding:12px;
+  width:260px;background:var(--panel);padding:12px 10px;
   position:sticky;top:0;height:100vh;overflow:auto;
   border-right:1px solid var(--stroke);
   transition:width .2s ease, transform .2s ease;
 }
+
 .logo-row{
-  display:flex;align-items:center;justify-content:space-between;height:56px;margin-bottom:6px
+  display:flex;align-items:center;justify-content:space-between;height:56px;margin-bottom:6px;
+  padding:0 4px;
 }
 .logo{display:flex;align-items:center;gap:10px;font-weight:700}
-.logo .material-symbols-outlined{font-size:22px}
+.logo .material-symbols-outlined{font-size:22px;color:var(--text)}
+.logo .label{color:var(--text)}
+
 .pin{
-  background:transparent;border:0;color:var(--muted);cursor:pointer;padding:6px;border-radius:8px
+  background:transparent;border:1px solid var(--stroke);
+  color:var(--muted);cursor:pointer;padding:6px;border-radius:10px;
 }
 .pin:hover{background:#1e2128;color:var(--text)}
 
-.nav{display:flex;flex-direction:column;gap:4px}
+.nav{display:flex;flex-direction:column;gap:6px;padding:4px}
 .nav-item{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 12px;border-radius:10px;color:var(--muted);
+  display:flex;align-items:center;gap:12px;height:44px;
+  padding:0 12px;border-radius:12px;color:var(--muted);
+  background:transparent;transition:background .15s ease,color .15s ease;
 }
-.nav-item .material-symbols-outlined{font-size:20px}
+.nav-item .material-symbols-outlined{
+  font-size:20px;color:currentColor; /* ไอคอนใช้สีเดียวกับข้อความ */
+}
 .nav-item:hover{background:#1e2128;color:var(--text)}
 .nav-item.active{
-  background:#1e2128;color:var(--text);position:relative
+  background:rgba(85,194,218,.16); /* pill อ่อน ๆ */
+  color:var(--text);box-shadow:0 0 0 1px rgba(85,194,218,.35) inset;
 }
-.nav-item.active::before{
-  content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;background:var(--accent);border-radius:2px
-}
+.nav-item.active .material-symbols-outlined{color:var(--accent)}
 
-/* ย่อเมนู (desktop mini) */
-.sidebar.collapsed{width:72px}
+.sidebar.collapsed{width:76px}
 .sidebar.collapsed .label{display:none}
 .sidebar.collapsed .pin .material-symbols-outlined{transform:rotate(180deg)}
 
