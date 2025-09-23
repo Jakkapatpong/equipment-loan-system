@@ -1,3 +1,12 @@
+<!doctype html><html lang="th"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Login | Equip Manager V2.3</title>
+<link href="assets/style.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<script src="js/config.js?v=4"></script>
+<script src="js/app.js?v=4"></script>
+
 <script>
 async function handleLogin(ev){
   ev.preventDefault();
@@ -19,9 +28,6 @@ async function handleLogin(ev){
   } catch (e) { alert(e.message || String(e)); }
 }
 </script>
-
-
-
 <div class="login-wrap">
   <div class="center"><div class="brand"><span class="material-symbols-outlined">qr_code_scanner</span> Equip Manager V2.3</div><p class="small">เข้าสู่ระบบ</p></div>
   <form onsubmit="handleLogin(event)">
