@@ -1,39 +1,87 @@
-<!doctype html><html lang="th"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Login | Equip Manager V2.3</title>
-<link href="assets/style.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Login | Equip Manager V2.3</title>
 
-<script src="js/config.js?v=4"></script>
-<script src="js/app.js?v=4"></script>
+  <link href="assets/style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
-<script>
-async function handleLogin(ev){
-  ev.preventDefault();
-  const u = document.getElementById('user').value.trim();
-  const p = document.getElementById('pass').value;
+  <!-- ต้องมาก่อน app.js -->
+  <script src="js/config.js?v=5"></script>
+  <script src="js/app.js?v=5"></script>
 
-  try {
-    const res = await api('login', { username: u, password: p });
-    if (!res || !res.ok) throw new Error(res && res.error || 'เข้าสู่ระบบไม่สำเร็จ');
+  <script>
+  // จัดการล็อกอิน
+  async function handleLogin(ev){
+    ev.preventDefault();
+    const u = document.getElementById('user').value.trim();
+    const p = document.getElementById('pass').value;
 
-    const t = res.data && res.data.token;
-    if (!t) throw new Error('ไม่พบ token จากเซิร์ฟเวอร์');
+    try {
+      const res = await api('login', { username: u, password: p });
+      if (!res || !res.ok) throw new Error((res && res.error) || 'เข้าสู่ระบบไม่สำเร็จ');
 
-    setToken(t);
-    // เก็บ session สำหรับเมนู/ส่วนหัว
-    setSession({ user: res.data.user, role: res.data.role, fullname: res.data.user });
+      const t = res.data && res.data.token;
+      if (!t) throw new Error('ไม่พบ token จากเซิร์ฟเวอร์');
 
-    window.location.href = 'home.html';
-  } catch (e) { alert(e.message || String(e)); }
-}
-</script>
-<div class="login-wrap">
-  <div class="center"><div class="brand"><span class="material-symbols-outlined">qr_code_scanner</span> Equip Manager V2.3</div><p class="small">เข้าสู่ระบบ</p></div>
-  <form onsubmit="handleLogin(event)">
-    <div class="input"><label>ผู้ใช้</label><input id="user" required></div>
-    <div class="input"><label>รหัสผ่าน</label><input id="pass" type="password" required></div>
-    <div style="margin-top:12px;display:flex;gap:8px;"><button class="btn primary" type="submit">Login</button></div>
-  </form>
-</div>
-</body></html>
+      // เก็บ token + ข้อมูล session ไว้ใช้ในเมนู/หัวเว็บ
+      setToken(t);
+      setSession({ user: res.data.user, role: res.data.role, fullname: res.data.user });
+
+      window.location.href = 'home.html';
+    } catch (e) {
+      alert(e.message || String(e));
+    }
+  }
+
+  // สลับแสดง/ซ่อนรหัสผ่าน (ไอคอนตา)
+  document.addEventListener('DOMContentLoaded', () => {
+    const pass = document.getElementById('pass');
+    const btn  = document.querySelector('.toggle-eye');
+    if (!pass || !btn) return;
+    const icon = btn.querySelector('.material-symbols-outlined');
+
+    btn.addEventListener('click', () => {
+      const show = pass.type === 'password';
+      pass.type = show ? 'text' : 'password';
+      icon.textContent = show ? 'visibility_off' : 'visibility';
+      btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+      pass.focus();
+    });
+  });
+  </script>
+</head>
+
+<body>
+  <div class="login-wrap">
+    <div class="center">
+      <div class="brand">
+        <span class="material-symbols-outlined">qr_code_scanner</span>
+        Equip Manager V2.3
+      </div>
+      <p class="small">เข้าสู่ระบบ</p>
+    </div>
+
+    <form onsubmit="handleLogin(event)">
+      <div class="input">
+        <label>ผู้ใช้</label>
+        <input id="user" required autocomplete="username" autofocus>
+      </div>
+
+      <div class="input password-field">
+        <label>รหัสผ่าน</label>
+        <input id="pass" type="password" required autocomplete="current-password">
+        <button type="button" class="toggle-eye" aria-label="แสดง/ซ่อนรหัสผ่าน" aria-pressed="false">
+          <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+        </button>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:8px;">
+        <button class="btn primary" type="submit">Login</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
