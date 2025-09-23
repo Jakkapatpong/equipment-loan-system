@@ -1,21 +1,86 @@
-<!doctype html><html lang='th'><head><title>พิมพ์ QR | Equip V2.3</title><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link href="assets/style.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-<script src="js/config.js"></script><script src="js/app.js"></script><script src="js/sidebar.js"></script>
-<script>document.addEventListener('DOMContentLoaded',function(){ requireLogin(["admin", "dev"]); renderSidebar(); });</script></head><body><div class='container'><aside class='sidebar'></aside><main class='main'><div class='topbar'><div class='left'><button class='btn hamburger'><span class='material-symbols-outlined'>menu</span></button><strong>พิมพ์ QR</strong></div><div class='user-info'>...</div></div><div class='content'>
-<div class='card no-print'>
-  <form id='sel'>
-    <div class='input'><label>ใส่ ID อุปกรณ์ (เช่น EQXXXX)</label><input id='eid' placeholder='EQXXXX'><small class='small'>หรือใช้ปุ่ม <em>พิมพ์ QR</em> ในหน้า “รายการอุปกรณ์” เพื่อเปิดหน้านี้พร้อม ID</small></div>
-    <button class='btn' type='submit'>แสดง QR</button>
-  </form>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>พิมพ์ QR | Equip V2.3</title>
+
+  <link href="assets/style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script> <!-- สร้าง QR -->
+
+  <script src="js/config.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
+  <script src="js/sidebar.js?v=4"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      requireLogin(['admin','dev']);   // จำกัดหน้า
+      renderSidebar();
+
+      const sel = document.getElementById('equipSelect');
+      // โหลดรายการอุปกรณ์ (id+ชื่อ) แล้วใส่ลง dropdown
+      const res = await api('equip_list_for_select'); // ← ดูส่วน B ด้านล่าง
+      if (res.ok && Array.isArray(res.data)) {
+        sel.innerHTML = res.data.map(x =>
+          `<option value="${x.id}">${x.name} (${x.id})</option>`
+        ).join('');
+      } else {
+        alert(res.error || 'โหลดรายการอุปกรณ์ไม่สำเร็จ');
+      }
+    });
+
+    async function renderQR(){
+      const id = document.getElementById('equipSelect').value;
+      const canvas = document.getElementById('qrCanvas');
+      const payload = JSON.stringify({ type:'EQUIP', id:id });
+      await QRCode.toCanvas(canvas, payload, { width: 256, margin: 2 });
+      document.getElementById('qrPreviewText').textContent = payload;
+    }
+    function doPrint(){ window.print(); }
+  </script>
+
+  <style>
+    .qr-tools{display:grid;gap:12px}
+    .qr-grid{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
+    .qr-box{background:var(--panel);border:1px solid var(--stroke);border-radius:14px;padding:14px;text-align:center}
+    .qr-label{color:var(--muted);font-size:12px;margin:8px 0 0}
+    @media print{ .topbar,.sidebar,.btn,.input,select,#qrPreviewText{display:none!important} .qr-box{border:none} body{background:#fff} }
+  </style>
+</head>
+<body>
+<div class="container">
+  <aside class="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="left">
+        <button class="btn hamburger"><span class="material-symbols-outlined">menu</span></button>
+        <strong>พิมพ์ QR</strong>
+      </div>
+      <div class="user-info">...</div>
+    </div>
+
+    <div class="content">
+      <div class="card qr-tools">
+        <div class="input">
+          <label>เลือกอุปกรณ์จากรายการ</label>
+          <select id="equipSelect"></select>
+        </div>
+        <div><button class="btn" onclick="renderQR()">แสดง QR</button></div>
+      </div>
+
+      <div class="qr-grid">
+        <div></div>
+        <div class="qr-box">
+          <canvas id="qrCanvas" width="256" height="256"></canvas>
+          <div class="qr-label" id="qrPreviewText"></div>
+          <div style="margin-top:12px"><button class="btn primary" onclick="doPrint()">
+            <span class="material-symbols-outlined" style="vertical-align:middle">print</span> พิมพ์
+          </button></div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </main>
 </div>
-<div class='card'>
-  <div id='printArea' class='center'>
-    <h2 id='pname' class='print-only'></h2>
-    <img id='pqr' alt='QR' style='max-width:420px;margin:0 auto;'/>
-    <p id='pid'></p>
-  </div>
-  <div class='no-print' style='margin-top:12px;text-align:center'><button class='btn primary' id='printBtn'><span class='material-symbols-outlined'>print</span> พิมพ์</button></div>
-</div>
-<script src='js/print-qr.js'></script>
-</div></main></div></body></html>
+</body>
+</html>
