@@ -8,12 +8,10 @@
   <link href="assets/style.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
-  <!-- ต้องมาก่อน app.js -->
-  <script src="js/config.js?v=6"></script>
-  <script src="js/app.js?v=6"></script>
+  <script src="js/config.js?v=7"></script>
+  <script src="js/app.js?v=7"></script>
 
   <script>
-  // โหลดข้อมูลจำผู้ใช้/รหัสผ่าน + ผูกปุ่มตา
   document.addEventListener('DOMContentLoaded', () => {
     // Prefill remember
     try{
@@ -23,8 +21,8 @@
     }catch(e){}
 
     // Toggle eye
-    const pass = document.getElementById('pass');
-    const btn  = document.querySelector('.password-field .toggle-eye');
+    const btn = document.querySelector('.password-field .toggle-eye');
+    const pass= document.getElementById('pass');
     if (btn && pass){
       const icon = btn.querySelector('.material-symbols-outlined');
       btn.addEventListener('click', () => {
@@ -37,11 +35,11 @@
     }
   });
 
-  // ทำการล็อกอิน
   async function handleLogin(ev){
     ev.preventDefault();
     const u = document.getElementById('user').value.trim();
     const p = document.getElementById('pass').value;
+
     try {
       const res = await api('login', { username: u, password: p });
       if (!res || !res.ok) throw new Error((res && res.error) || 'เข้าสู่ระบบไม่สำเร็จ');
@@ -52,7 +50,6 @@
       setToken(t);
       setSession({ user: res.data.user, role: res.data.role, fullname: res.data.user });
 
-      // จำผู้ใช้/รหัสผ่าน (หากติ๊กเลือก)
       const remember = document.getElementById('rememberPw').checked;
       localStorage.setItem('remember_login', JSON.stringify({ user: u, pw: remember ? p : '' }));
 
@@ -76,21 +73,16 @@
         <input id="user" required autocomplete="username" autofocus>
       </div>
 
-    <div class="input password-field">
-      <label>รหัสผ่าน</label>
-      <div class="field">
-        <input id="pass" type="password" required autocomplete="current-password">
-        <button type="button" class="toggle-eye" aria-label="แสดง/ซ่อนรหัสผ่าน" aria-pressed="false">
-          <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
-        </button>
+      <div class="input password-field">
+        <label>รหัสผ่าน</label>
+        <div class="field">
+          <input id="pass" type="password" required autocomplete="current-password">
+          <button type="button" class="toggle-eye" aria-label="แสดง/ซ่อนรหัสผ่าน"><span class="material-symbols-outlined">visibility</span></button>
+        </div>
       </div>
-    </div>
-
 
       <div class="input inline">
-        <label class="check">
-          <input type="checkbox" id="rememberPw"> จดจำผู้ใช้/รหัสผ่านในอุปกรณ์นี้
-        </label>
+        <label class="check"><input type="checkbox" id="rememberPw"> จดจำผู้ใช้/รหัสผ่านในอุปกรณ์นี้</label>
       </div>
 
       <div class="actions right">
