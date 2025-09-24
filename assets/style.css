@@ -153,19 +153,35 @@ img{max-width:100%;display:block}
   body.sidebar-open .sidebar-overlay{display:block}
 }
 
-/* ---- login: ปุ่มตาจัดกึ่งกลางด้วย .field ที่หุ้ม input ---- */
+/* --/* ===== Password eye exactly inside input (right-middle) ===== */
 .input.password-field .field{ position:relative; }
-.input.password-field .field input{ padding-right:48px; }
-.input.password-field .toggle-eye{
-  position:absolute; right:8px; top:50%; transform:translateY(-50%);
-  display:inline-flex; align-items:center; justify-content:center;
-  width:36px; height:36px; border-radius:10px;
-  background:transparent; border:0; cursor:pointer; color:var(--muted);
-}
-.input.password-field .toggle-eye .material-symbols-outlined{ font-size:22px; line-height:1; }
-.input.password-field .toggle-eye:hover,
-.input.password-field .toggle-eye:focus{ color:var(--text); outline:none; }
 
-/* แถว checkbox แบบอินไลน์ */
-.input.inline{ flex-direction:row; align-items:center; gap:8px; }
-.input.inline .check{ display:flex; align-items:center; gap:8px; color:var(--muted); font-size:13px; }
+.input.password-field .field input{
+  display:block; width:100%;
+  padding-right:48px;                 /* ที่เว้นให้ปุ่มตา */
+  min-height:44px;                    /* สูงเท่าเดิม */
+  line-height:1.2;
+}
+
+.input.password-field .toggle-eye{
+  --eye-offset-y: 0px;                /* ปรับจูนได้ทีหลัง (+/-1px) */
+  position:absolute;
+  right:12px;                         /* ชิดขวาตามที่ทำเครื่องหมาย */
+  top:calc(50% + var(--eye-offset-y));
+  transform:translateY(-50%);
+  display:inline-flex; align-items:center; justify-content:center;
+  width:24px; height:24px;
+  background:transparent; border:0; cursor:pointer;
+  color:var(--muted); border-radius:8px;
+  z-index:1;                          /* อยู่เหนือ input */
+  pointer-events:auto;
+}
+
+.input.password-field .toggle-eye .material-symbols-outlined{
+  font-size:22px; line-height:1;
+}
+
+.input.password-field .toggle-eye:hover,
+.input.password-field .toggle-eye:focus{
+  color:var(--text); outline:none;
+}
