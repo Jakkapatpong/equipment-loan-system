@@ -9,16 +9,39 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
   <!-- ต้องมาก่อน app.js -->
-  <script src="js/config.js?v=5"></script>
-  <script src="js/app.js?v=5"></script>
+  <script src="js/config.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
 
   <script>
-  // จัดการล็อกอิน
+  // โหลดข้อมูลจำผู้ใช้/รหัสผ่าน + ผูกปุ่มตา
+  document.addEventListener('DOMContentLoaded', () => {
+    // Prefill remember
+    try{
+      const m = JSON.parse(localStorage.getItem('remember_login') || '{}');
+      if (m.user) document.getElementById('user').value = m.user;
+      if (m.pw)  { document.getElementById('pass').value = m.pw; document.getElementById('rememberPw').checked = true; }
+    }catch(e){}
+
+    // Toggle eye
+    const pass = document.getElementById('pass');
+    const btn  = document.querySelector('.password-field .toggle-eye');
+    if (btn && pass){
+      const icon = btn.querySelector('.material-symbols-outlined');
+      btn.addEventListener('click', () => {
+        const show = pass.type === 'password';
+        pass.type = show ? 'text' : 'password';
+        icon.textContent = show ? 'visibility_off' : 'visibility';
+        btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+        pass.focus();
+      });
+    }
+  });
+
+  // ทำการล็อกอิน
   async function handleLogin(ev){
     ev.preventDefault();
     const u = document.getElementById('user').value.trim();
     const p = document.getElementById('pass').value;
-
     try {
       const res = await api('login', { username: u, password: p });
       if (!res || !res.ok) throw new Error((res && res.error) || 'เข้าสู่ระบบไม่สำเร็จ');
@@ -26,41 +49,24 @@
       const t = res.data && res.data.token;
       if (!t) throw new Error('ไม่พบ token จากเซิร์ฟเวอร์');
 
-      // เก็บ token + ข้อมูล session ไว้ใช้ในเมนู/หัวเว็บ
       setToken(t);
       setSession({ user: res.data.user, role: res.data.role, fullname: res.data.user });
+
+      // จำผู้ใช้/รหัสผ่าน (หากติ๊กเลือก)
+      const remember = document.getElementById('rememberPw').checked;
+      localStorage.setItem('remember_login', JSON.stringify({ user: u, pw: remember ? p : '' }));
 
       window.location.href = 'home.html';
     } catch (e) {
       alert(e.message || String(e));
     }
   }
-
-  // สลับแสดง/ซ่อนรหัสผ่าน (ไอคอนตา)
-  document.addEventListener('DOMContentLoaded', () => {
-    const pass = document.getElementById('pass');
-    const btn  = document.querySelector('.toggle-eye');
-    if (!pass || !btn) return;
-    const icon = btn.querySelector('.material-symbols-outlined');
-
-    btn.addEventListener('click', () => {
-      const show = pass.type === 'password';
-      pass.type = show ? 'text' : 'password';
-      icon.textContent = show ? 'visibility_off' : 'visibility';
-      btn.setAttribute('aria-pressed', show ? 'true' : 'false');
-      pass.focus();
-    });
-  });
   </script>
 </head>
-
 <body>
   <div class="login-wrap">
     <div class="center">
-      <div class="brand">
-        <span class="material-symbols-outlined">qr_code_scanner</span>
-        Equip Manager V2.3
-      </div>
+      <div class="brand"><span class="material-symbols-outlined">qr_code_scanner</span> Equip Manager V2.3</div>
       <p class="small">เข้าสู่ระบบ</p>
     </div>
 
@@ -70,15 +76,24 @@
         <input id="user" required autocomplete="username" autofocus>
       </div>
 
+      <!-- เปลี่ยน markup: เอาปุ่มตาไว้ใน .field ที่ห่อ input -->
       <div class="input password-field">
         <label>รหัสผ่าน</label>
-        <input id="pass" type="password" required autocomplete="current-password">
-        <button type="button" class="toggle-eye" aria-label="แสดง/ซ่อนรหัสผ่าน" aria-pressed="false">
-          <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
-        </button>
+        <div class="field">
+          <input id="pass" type="password" required autocomplete="current-password">
+          <button type="button" class="toggle-eye" aria-label="แสดง/ซ่อนรหัสผ่าน" aria-pressed="false">
+            <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+          </button>
+        </div>
       </div>
 
-      <div style="margin-top:12px;display:flex;gap:8px;">
+      <div class="input inline">
+        <label class="check">
+          <input type="checkbox" id="rememberPw"> จดจำผู้ใช้/รหัสผ่านในอุปกรณ์นี้
+        </label>
+      </div>
+
+      <div class="actions right">
         <button class="btn primary" type="submit">Login</button>
       </div>
     </form>
