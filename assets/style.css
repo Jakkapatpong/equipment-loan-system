@@ -153,14 +153,19 @@ img{max-width:100%;display:block}
   body.sidebar-open .sidebar-overlay{display:block}
 }
 
-/* ====== Toggle eye (show/hide password) – จัดกลางแน่นอน ====== */
-.input.password-field{position:relative}
-.input.password-field input{padding-right:48px}
-.toggle-eye{
-  position:absolute;right:8px;top:50%;transform:translateY(-50%);
-  display:inline-flex;align-items:center;justify-content:center;
-  width:36px;height:36px;border-radius:10px;
-  background:transparent;border:0;cursor:pointer;color:var(--muted);
+/* ---- login: ปุ่มตาจัดกึ่งกลางด้วย .field ที่หุ้ม input ---- */
+.input.password-field .field{ position:relative; }
+.input.password-field .field input{ padding-right:48px; }
+.input.password-field .toggle-eye{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  display:inline-flex; align-items:center; justify-content:center;
+  width:36px; height:36px; border-radius:10px;
+  background:transparent; border:0; cursor:pointer; color:var(--muted);
 }
-.toggle-eye .material-symbols-outlined{font-size:22px;line-height:1}
-.toggle-eye:hover,.toggle-eye:focus{color:var(--text);outline:none}
+.input.password-field .toggle-eye .material-symbols-outlined{ font-size:22px; line-height:1; }
+.input.password-field .toggle-eye:hover,
+.input.password-field .toggle-eye:focus{ color:var(--text); outline:none; }
+
+/* แถว checkbox แบบอินไลน์ */
+.input.inline{ flex-direction:row; align-items:center; gap:8px; }
+.input.inline .check{ display:flex; align-items:center; gap:8px; color:var(--muted); font-size:13px; }
