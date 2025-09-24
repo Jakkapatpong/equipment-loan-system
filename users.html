@@ -8,14 +8,18 @@
   <link href="assets/style.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
-  <script src="js/config.js?v=7"></script>
-  <script src="js/app.js?v=7"></script>
-  <script src="js/sidebar.js?v=5"></script>
-  <script src="js/users.js?v=1"></script>
+  <!-- ลำดับโหลดสำคัญ: config -> app -> sidebar -> users -->
+  <script src="js/config.js?v=8" defer></script>
+  <script src="js/app.js?v=8" defer></script>
+  <script src="js/sidebar.js?v=6" defer></script>
+  <script src="js/users.js?v=2" defer></script>
 </head>
 <body>
 <div class="container">
   <aside class="sidebar"></aside>
+  <!-- ถ้า sidebar.js ของคุณไม่ได้สร้าง overlay อัตโนมัติ ให้ใช้บรรทัดนี้: -->
+  <!-- <div class="sidebar-overlay"></div> -->
+
   <main class="main">
     <div class="topbar">
       <div class="left">
@@ -31,40 +35,56 @@
         <div class="card">
           <h3>สร้างผู้ใช้</h3>
           <div class="grid cols-2">
-            <div class="input"><label>username</label><input id="u_user"></div>
+            <div class="input"><label>username</label><input id="u_user" required autocomplete="off"></div>
+
             <div class="input password-field">
               <label>password</label>
               <div class="field">
-                <input id="u_pass" type="password">
-                <button type="button" class="toggle-eye" data-target="u_pass">
+                <input id="u_pass" type="password" required autocomplete="new-password">
+                <button type="button" class="toggle-eye" data-target="u_pass" aria-label="แสดง/ซ่อนรหัสผ่าน">
                   <span class="material-symbols-outlined">visibility</span>
                 </button>
               </div>
             </div>
-            <div class="input"><label>ชื่อพนักงาน</label><input id="u_name"></div>
-            <div class="input"><label>แผนก</label><input id="u_dept"></div>
-            <div class="input"><label>ตำแหน่ง</label><input id="u_pos"></div>
+
+            <div class="input"><label>ชื่อพนักงาน</label><input id="u_name" autocomplete="off"></div>
+            <div class="input"><label>แผนก</label><input id="u_dept" autocomplete="off"></div>
+            <div class="input"><label>ตำแหน่ง</label><input id="u_pos" autocomplete="off"></div>
             <div class="input"><label>รูปพนักงาน</label><input id="u_pic" type="file" accept="image/*"></div>
-            <div class="input"><label>สถานะในระบบ</label>
-              <select id="u_status"><option value="active">active</option><option value="inactive">inactive</option></select>
+
+            <div class="input">
+              <label>สถานะในระบบ</label>
+              <select id="u_status">
+                <option value="active">active</option>
+                <option value="inactive">inactive</option>
+              </select>
             </div>
-            <div class="input"><label>role</label>
-              <select id="u_role"><option value="user">user</option><option value="admin">admin</option></select>
+
+            <div class="input">
+              <label>role</label>
+              <select id="u_role">
+                <option value="user">user</option>
+                <option value="admin">admin</option>
+              </select>
             </div>
           </div>
-          <div class="actions right">
-            <button class="btn" id="btn_clear">ล้างฟอร์ม</button>
-            <button class="btn primary" id="btn_create">สร้างผู้ใช้</button>
+
+          <div class="actions right" style="margin-top:10px">
+            <button class="btn" id="btn_clear" type="button">ล้างฟอร์ม</button>
+            <button class="btn primary" id="btn_create" type="button">สร้างผู้ใช้</button>
           </div>
         </div>
 
         <!-- ตารางผู้ใช้ -->
         <div class="card">
           <h3>รายการผู้ใช้</h3>
-          <div class="table-wrap">
+          <div class="table-wrap" style="overflow:auto">
             <table class="table">
               <thead>
-                <tr><th>id</th><th>user</th><th>ชื่อ</th><th>แผนก</th><th>ตำแหน่ง</th><th>role</th><th>สถานะ</th><th class="right">จัดการ</th></tr>
+                <tr>
+                  <th>id</th><th>user</th><th>ชื่อ</th><th>แผนก</th>
+                  <th>ตำแหน่ง</th><th>role</th><th>สถานะ</th><th class="right">จัดการ</th>
+                </tr>
               </thead>
               <tbody id="users_tbody">
                 <tr><td colspan="8" class="small">กำลังโหลด…</td></tr>
@@ -77,5 +97,13 @@
     </div>
   </main>
 </div>
+
+<!-- init กันพลาด (ถ้า users.js มี DOMContentLoaded อยู่แล้ว ส่วนนี้จะไม่กระทบ) -->
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    if (typeof requireLogin === 'function') requireLogin(['admin','dev']);
+    if (typeof renderSidebar === 'function') renderSidebar();
+  });
+</script>
 </body>
 </html>
