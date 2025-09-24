@@ -3,19 +3,39 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 <script src="js/config.js"></script><script src="js/app.js"></script><script src="js/sidebar.js"></script>
 <script>document.addEventListener('DOMContentLoaded',function(){ requireLogin(null); renderSidebar(); });</script></head><body><div class='container'><aside class='sidebar'></aside><main class='main'><div class='topbar'><div class='left'><button class='btn hamburger'><span class='material-symbols-outlined'>menu</span></button><strong>โปรไฟล์ของฉัน</strong></div><div class='user-info'>...</div></div><div class='content'>
-<div class='grid cols-2'>
-  <div class='card'><h3>ข้อมูลโปรไฟล์</h3><form id='pf'>
-    <div class='input'><label>ชื่อพนักงาน</label><input id='fullname'></div>
-    <div class='input'><label>แผนก</label><input id='dept'></div>
-    <div class='input'><label>ตำแหน่ง</label><input id='title'></div>
-    <div class='input'><label>รูปโปรไฟล์</label><input id='photo' type='file' accept='image/*'></div>
-    <button class='btn primary' type='submit'>บันทึก</button>
-  </form></div>
-  <div class='card'><h3>เปลี่ยนรหัสผ่าน</h3><form id='pwf'>
-    <div class='input'><label>รหัสผ่านเดิม</label><input id='oldpass' type='password' required></div>
-    <div class='input'><label>รหัสผ่านใหม่</label><input id='newpass' type='password' required></div>
-    <button class='btn primary' type='submit'>เปลี่ยนรหัสผ่าน</button>
-  </form></div>
+<div class="content">
+  <div class="grid cols-2">
+    <!-- การ์ดซ้าย: ข้อมูลโปรไฟล์ -->
+    <div class="card">
+      <h3>ข้อมูลโปรไฟล์</h3>
+      <div class="input"><label>ชื่อพนักงาน</label><input id="pf_name"></div>
+      <div class="input"><label>แผนก</label><input id="pf_dept"></div>
+      <div class="input"><label>ตำแหน่ง</label><input id="pf_pos"></div>
+      <div class="input"><label>รูปโปรไฟล์</label><input id="pf_pic" type="file" accept="image/*"></div>
+
+      <div class="actions right">
+        <button class="btn">รีเซ็ต</button>
+        <button class="btn primary">บันทึก</button>
+      </div>
+    </div>
+
+    <!-- การ์ดขวา: เปลี่ยนรหัสผ่าน -->
+    <div class="card">
+      <h3>เปลี่ยนรหัสผ่าน</h3>
+      <div class="input"><label>รหัสผ่านเดิม</label><input type="password" id="old_pass"></div>
+      <div class="input password-field">
+        <label>รหัสผ่านใหม่</label>
+        <input type="password" id="new_pass">
+        <button type="button" class="toggle-eye"><span class="material-symbols-outlined">visibility</span></button>
+      </div>
+      <div class="input"><label>ยืนยันรหัสผ่านใหม่</label><input type="password" id="new_pass2"></div>
+
+      <div class="actions right">
+        <button class="btn primary">เปลี่ยนรหัสผ่าน</button>
+      </div>
+    </div>
+  </div>
 </div>
+
 <script src='js/profile.js'></script>
 </div></main></div></body></html>
