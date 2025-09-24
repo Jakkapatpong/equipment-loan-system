@@ -64,7 +64,7 @@ img{max-width:100%;display:block}
 .btn.ghost{background:transparent;border-color:#2a2e36}
 .card .btn{margin-top:4px}
 
-/* แถบปุ่มใช้งานซ้ำได้ */
+/* แถบปุ่มใช้งานซ้ำ */
 .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
 .actions.right{justify-content:flex-end}
 .actions.center{justify-content:center}
@@ -153,35 +153,30 @@ img{max-width:100%;display:block}
   body.sidebar-open .sidebar-overlay{display:block}
 }
 
-/* --/* ===== Password eye exactly inside input (right-middle) ===== */
+/* ====== Password eye (รองรับทั้งมี/ไม่มี .field) ====== */
+.input.password-field{ position:relative; }
+
+/* กรณีใช้ .field ครอบ input */
 .input.password-field .field{ position:relative; }
-
-.input.password-field .field input{
-  display:block; width:100%;
-  padding-right:48px;                 /* ที่เว้นให้ปุ่มตา */
-  min-height:44px;                    /* สูงเท่าเดิม */
-  line-height:1.2;
-}
-
-.input.password-field .toggle-eye{
-  --eye-offset-y: 0px;                /* ปรับจูนได้ทีหลัง (+/-1px) */
-  position:absolute;
-  right:12px;                         /* ชิดขวาตามที่ทำเครื่องหมาย */
-  top:calc(50% + var(--eye-offset-y));
-  transform:translateY(-50%);
+.input.password-field .field input{ padding-right:48px; }
+.input.password-field .field .toggle-eye{
+  position:absolute; right:12px; top:50%; transform:translateY(-50%);
   display:inline-flex; align-items:center; justify-content:center;
-  width:24px; height:24px;
-  background:transparent; border:0; cursor:pointer;
-  color:var(--muted); border-radius:8px;
-  z-index:1;                          /* อยู่เหนือ input */
-  pointer-events:auto;
+  width:24px; height:24px; background:transparent; border:0; cursor:pointer;
+  color:var(--muted); border-radius:8px; z-index:1;
 }
+.input.password-field .field .toggle-eye .material-symbols-outlined{ font-size:22px; line-height:1; }
+.input.password-field .field .toggle-eye:hover,
+.input.password-field .field .toggle-eye:focus{ color:var(--text); outline:none; }
 
-.input.password-field .toggle-eye .material-symbols-outlined{
-  font-size:22px; line-height:1;
+/* Fallback: ถ้าไม่ได้ใช้ .field ให้วางปุ่มตาใต้ .password-field โดยตรงก็จัดตำแหน่งให้ */
+.input.password-field > input{ padding-right:48px; }
+.input.password-field > .toggle-eye{
+  position:absolute; right:12px; top:50%; transform:translateY(-50%);
+  display:inline-flex; align-items:center; justify-content:center;
+  width:24px; height:24px; background:transparent; border:0; cursor:pointer;
+  color:var(--muted); border-radius:8px; z-index:1;
 }
-
-.input.password-field .toggle-eye:hover,
-.input.password-field .toggle-eye:focus{
-  color:var(--text); outline:none;
-}
+.input.password-field > .toggle-eye .material-symbols-outlined{ font-size:22px; line-height:1; }
+.input.password-field > .toggle-eye:hover,
+.input.password-field > .toggle-eye:focus{ color:var(--text); outline:none; }
