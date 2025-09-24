@@ -1,41 +1,103 @@
-<!doctype html><html lang='th'><head><title>โปรไฟล์ของฉัน | Equip V2.3</title><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link href="assets/style.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-<script src="js/config.js"></script><script src="js/app.js"></script><script src="js/sidebar.js"></script>
-<script>document.addEventListener('DOMContentLoaded',function(){ requireLogin(null); renderSidebar(); });</script></head><body><div class='container'><aside class='sidebar'></aside><main class='main'><div class='topbar'><div class='left'><button class='btn hamburger'><span class='material-symbols-outlined'>menu</span></button><strong>โปรไฟล์ของฉัน</strong></div><div class='user-info'>...</div></div><div class='content'>
-<div class="content">
-  <div class="grid cols-2">
-    <!-- การ์ดซ้าย: ข้อมูลโปรไฟล์ -->
-    <div class="card">
-      <h3>ข้อมูลโปรไฟล์</h3>
-      <div class="input"><label>ชื่อพนักงาน</label><input id="pf_name"></div>
-      <div class="input"><label>แผนก</label><input id="pf_dept"></div>
-      <div class="input"><label>ตำแหน่ง</label><input id="pf_pos"></div>
-      <div class="input"><label>รูปโปรไฟล์</label><input id="pf_pic" type="file" accept="image/*"></div>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>โปรไฟล์ของฉัน | Equip V2.3</title>
 
-      <div class="actions right">
-        <button class="btn">รีเซ็ต</button>
-        <button class="btn primary">บันทึก</button>
-      </div>
-    </div>
+  <link href="assets/style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
-    <!-- การ์ดขวา: เปลี่ยนรหัสผ่าน -->
-    <div class="card">
-      <h3>เปลี่ยนรหัสผ่าน</h3>
-      <div class="input"><label>รหัสผ่านเดิม</label><input type="password" id="old_pass"></div>
-      <div class="input password-field">
-        <label>รหัสผ่านใหม่</label>
-        <input type="password" id="new_pass">
-        <button type="button" class="toggle-eye"><span class="material-symbols-outlined">visibility</span></button>
-      </div>
-      <div class="input"><label>ยืนยันรหัสผ่านใหม่</label><input type="password" id="new_pass2"></div>
+  <script src="js/config.js?v=7"></script>
+  <script src="js/app.js?v=7"></script>
+  <script src="js/sidebar.js?v=5"></script>
 
-      <div class="actions right">
-        <button class="btn primary">เปลี่ยนรหัสผ่าน</button>
+  <script>
+    document.addEventListener('DOMContentLoaded',function(){
+      requireLogin(null);
+      renderSidebar();
+
+      // Toggle eye for all buttons in this page
+      document.querySelectorAll('.toggle-eye').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const id = btn.dataset.target;
+          const input = id ? document.getElementById(id) : btn.closest('.field')?.querySelector('input');
+          if(!input) return;
+          const show = input.type === 'password';
+          input.type = show ? 'text' : 'password';
+          btn.querySelector('.material-symbols-outlined').textContent = show ? 'visibility_off' : 'visibility';
+          input.focus();
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="left">
+          <button class="btn hamburger"><span class="material-symbols-outlined">menu</span></button>
+          <strong>โปรไฟล์ของฉัน</strong>
+        </div>
+        <div class="user-info">...</div>
       </div>
-    </div>
+
+      <div class="content">
+        <div class="grid cols-2">
+          <!-- การ์ดซ้าย -->
+          <div class="card">
+            <h3>ข้อมูลโปรไฟล์</h3>
+            <div class="input"><label>ชื่อพนักงาน</label><input id="pf_name"></div>
+            <div class="input"><label>แผนก</label><input id="pf_dept"></div>
+            <div class="input"><label>ตำแหน่ง</label><input id="pf_pos"></div>
+            <div class="input"><label>รูปโปรไฟล์</label><input id="pf_pic" type="file" accept="image/*"></div>
+
+            <div class="actions right">
+              <button class="btn" id="pf_reset">รีเซ็ต</button>
+              <button class="btn primary" id="pf_save">บันทึก</button>
+            </div>
+          </div>
+
+          <!-- การ์ดขวา -->
+          <div class="card">
+            <h3>เปลี่ยนรหัสผ่าน</h3>
+
+            <div class="input">
+              <label>รหัสผ่านเดิม</label>
+              <input type="password" id="old_pass">
+            </div>
+
+            <div class="input password-field">
+              <label>รหัสผ่านใหม่</label>
+              <div class="field">
+                <input type="password" id="new_pass">
+                <button type="button" class="toggle-eye" data-target="new_pass">
+                  <span class="material-symbols-outlined">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="input password-field">
+              <label>ยืนยันรหัสผ่านใหม่</label>
+              <div class="field">
+                <input type="password" id="new_pass2">
+                <button type="button" class="toggle-eye" data-target="new_pass2">
+                  <span class="material-symbols-outlined">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="actions right">
+              <button class="btn primary" id="pw_change">เปลี่ยนรหัสผ่าน</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
-</div>
 
-<script src='js/profile.js'></script>
-</div></main></div></body></html>
+  <script src="js/profile.js?v=2"></script>
+</body>
+</html>
