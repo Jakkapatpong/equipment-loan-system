@@ -1,182 +1,98 @@
+/* === Base (original minimal reset) === */
 :root{
   --bg:#0b0c10;
   --panel:#15171c;
   --panel-2:#111318;
-  --text:#e8e8ea;
-  --muted:#9aa0a6;
-  --accent:#55c2da;
-  --danger:#ff6b6b;
-  --ok:#22c55e;
-  --stroke:#22252b;
+  --text:#0b1020;
+  --muted:#6b7280;
+  --accent:#3b82f6;
+  --danger:#ef4444;
+  --ok:#16a34a;
+  --stroke:#e6e8ee;
 }
 
+/* keep legacy tokens used in app */
 *{box-sizing:border-box}
-html,body{
-  margin:0;padding:0;height:100%;
-  background:var(--bg);color:var(--text);
-  font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial
-}
+html,body{margin:0;padding:0;height:100%;font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
 a{color:var(--accent);text-decoration:none}
 img{max-width:100%;display:block}
 
-/* ====== Layout ====== */
 .container{display:flex;min-height:100vh}
 .main{flex:1;display:flex;flex-direction:column}
-.content{padding:16px;max-width:1200px;width:100%;margin:0 auto}
+.content{padding:16px;max-width:1280px;width:100%;margin:0 auto}
 
-/* ====== Topbar ====== */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px;border-bottom:1px solid var(--stroke);
-  position:sticky;top:0;background:var(--bg);z-index:5
-}
+/* Topbar */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--stroke);position:sticky;top:0;background:#fff;z-index:5}
 .topbar .left{display:flex;align-items:center;gap:10px}
-.hamburger{display:none}
-.user-info{color:var(--muted);font-size:13px}
+.hamburger{display:inline-flex;align-items:center;gap:6px}
 
-/* ====== Cards, Grid ====== */
-.card{
-  background:var(--panel);border:1px solid var(--stroke);border-radius:14px;
-  padding:14px;margin-bottom:14px;overflow:hidden;
-}
+/* Cards / Grid */
+.card{background:#fff;border:1px solid var(--stroke);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(16,24,40,.04),0 1px 3px rgba(16,24,40,.06)}
 .grid{display:grid;gap:12px}
 .grid.cols-2{grid-template-columns:repeat(2,1fr)}
 .grid.cols-3{grid-template-columns:repeat(3,1fr)}
 .grid.cols-4{grid-template-columns:repeat(4,1fr)}
 
-/* ====== Inputs & Buttons ====== */
+/* Inputs & Buttons */
 .input{display:flex;flex-direction:column;gap:6px}
-.input input,.input select,.input textarea{
-  background:var(--panel-2);border:1px solid var(--stroke);color:var(--text);
-  padding:10px 12px;border-radius:10px;min-height:44px;
-}
-.input input[type="file"]{
-  padding:8px;background:var(--panel-2);border:1px solid var(--stroke);border-radius:10px;width:100%;
-}
+.input label{font-size:12px;color:#6b7280}
+.input input,.input select,.input textarea{background:#fff;border:1px solid var(--stroke);color:#0b1020;padding:10px 12px;border-radius:10px}
+.input.inline{display:flex;align-items:center;gap:10px}
+.btn{padding:10px 14px;border-radius:10px;border:1px solid var(--stroke);background:#fff;color:#0b1020;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:#f8fafc}
+.btn.primary{background:#3b82f6;border-color:#3b82f6;color:#fff;font-weight:600}
+.btn.success{background:#16a34a;border-color:#16a34a;color:#fff}
+.btn.warning{background:#f59e0b;border-color:#f59e0b;color:#fff}
+.btn.ghost{background:#fff;border-color:var(--stroke)}
 
-.btn{
-  padding:10px 14px;border-radius:10px;border:1px solid var(--stroke);
-  background:#1b1e25;color:var(--text);cursor:pointer
-}
-.btn:hover{filter:brightness(1.06)}
-.btn.primary{background:var(--accent);border-color:transparent;color:#081217;font-weight:600}
-.btn.danger{background:#2b1111;border-color:#3a1a1a;color:#ff9a9a}
-.btn.ghost{background:transparent;border-color:#2a2e36}
-.card .btn{margin-top:4px}
+/* Table */
+.table{width:100%;border-collapse:separate;border-spacing:0}
+.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid var(--stroke);font-size:13px}
+.table thead th{font-weight:600;color:#334155;background:#f8fafc}
 
-/* แถบปุ่มใช้งานซ้ำ */
-.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
-.actions.right{justify-content:flex-end}
-.actions.center{justify-content:center}
+/* Badges */
+.badge{padding:4px 10px;border-radius:999px;font-size:12px;display:inline-flex;align-items:center;gap:6px;background:#f1f5f9;color:#334155;border:1px solid var(--stroke)}
+.badge.ok{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+.badge.busy{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+.badge.deleted{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+.badge.info{background:#eef2ff;color:#334155}
 
-/* ====== Table ====== */
-.table-wrap{overflow-x:auto}
-.table{width:100%;border-collapse:collapse}
-.table th,.table td{text-align:left;padding:10px;border-bottom:1px solid var(--stroke);font-size:13px}
-
-/* ====== Badges ====== */
-.badge{padding:4px 8px;border-radius:999px;font-size:12px}
-.badge.ok{background:#0e2b19;color:#9ef2c9}
-.badge.busy{background:#2b1a0e;color:#ffd4a6}
-.badge.deleted{background:#2b0e0e;color:#ffb5b5}
-.right{text-align:right}
-
-/* ====== Print ====== */
-.print-only{display:none}
-@media print{
-  .no-print{display:none!important}
-  .print-only{display:block}
-  body{background:#fff}
-  .card{border:none}
-}
-
-/* ====== Login Box ====== */
-.login-wrap{
-  max-width:380px;margin:12vh auto;padding:22px;background:var(--panel);
-  border:1px solid var(--stroke);border-radius:16px
-}
-.center{text-align:center}
-.small{color:var(--muted);font-size:12px}
-
-/* ====== Sidebar – pill style ====== */
-.sidebar{
-  width:260px;background:var(--panel);padding:12px 10px;
-  position:sticky;top:0;height:100vh;overflow:auto;
-  border-right:1px solid var(--stroke);
-  transition:width .2s ease, transform .2s ease;
-}
-.logo-row{
-  display:flex;align-items:center;justify-content:space-between;height:56px;margin-bottom:6px;
-  padding:0 4px;
-}
-.logo{display:flex;align-items:center;gap:10px;font-weight:700}
-.logo .material-symbols-outlined{font-size:22px;color:var(--text)}
-.logo .label{color:var(--text)}
-.pin{
-  background:transparent;border:1px solid var(--stroke);
-  color:var(--muted);cursor:pointer;padding:6px;border-radius:10px;
-}
-.pin:hover{background:#1e2128;color:var(--text)}
+/* Sidebar */
+.sidebar{width:260px;background:#fff;padding:12px 10px;position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--stroke)}
 .nav{display:flex;flex-direction:column;gap:6px;padding:4px}
-.nav-item{
-  display:flex;align-items:center;gap:12px;height:44px;
-  padding:0 12px;border-radius:12px;color:var(--muted);
-  background:transparent;transition:background .15s ease,color .15s ease;
-}
-.nav-item .material-symbols-outlined{font-size:20px;color:currentColor}
-.nav-item:hover{background:#1e2128;color:var(--text)}
-.nav-item.active{
-  background:rgba(85,194,218,.16);color:var(--text);
-  box-shadow:0 0 0 1px rgba(85,194,218,.35) inset;
-}
-.nav-item.active .material-symbols-outlined{color:var(--accent)}
-.sidebar.collapsed{width:76px}
-.sidebar.collapsed .label{display:none}
-.sidebar.collapsed .pin .material-symbols-outlined{transform:rotate(180deg)}
+.nav-item{display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:12px;color:#334155}
+.nav-item:hover{background:#f1f5f9}
+.nav-item.active{background:#eaf1ff;color:#1d4ed8;border:1px solid #c7d2fe}
 
-/* ====== Mobile Drawer + Overlay ====== */
+/* Login box */
+.login-wrap{max-width:420px;margin:8vh auto;padding:22px;background:#fff;border:1px solid var(--stroke);border-radius:16px;box-shadow:0 1px 2px rgba(16,24,40,.04),0 1px 3px rgba(16,24,40,.06)}
+.center{text-align:center}
+.small{color:#6b7280;font-size:12px}
+
+/* Password eye (aligned to the far-right inline with input) */
+.password-field .field{position:relative}
+.password-field input{width:100%;padding-right:44px}
+.toggle-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:transparent;border:0;cursor:pointer;padding:6px 8px;line-height:1;color:#6b7280;border-radius:8px}
+.toggle-eye:hover,.toggle-eye:focus{color:#0b1020;outline:none}
+
+/* Asset list (card list appearance) */
+.asset-list{display:flex;flex-direction:column;gap:10px}
+.asset-item{background:#fff;border:1px solid var(--stroke);border-radius:12px;padding:14px;display:flex;justify-content:space-between;gap:12px}
+.meta{color:#6b7280;font-size:12px;display:flex;gap:10px;flex-wrap:wrap}
+
+/* QR layout */
+.qr-grid{display:grid;grid-template-columns:1fr 360px 1fr;gap:16px;align-items:start}
+.qr-box{background:#fff;border:1px solid var(--stroke);border-radius:14px;padding:16px;text-align:center}
+
+/* Mobile */
 @media (max-width:980px){
   .grid.cols-4{grid-template-columns:repeat(2,1fr)}
   .grid.cols-3{grid-template-columns:repeat(2,1fr)}
-  .grid.cols-2{grid-template-columns:1fr}
-
-  .sidebar{
-    position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);
-    box-shadow:0 0 0 1px var(--stroke), 0 10px 30px rgba(0,0,0,.4);
-    z-index:1001
-  }
+  .sidebar{position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);box-shadow:0 0 0 1px var(--stroke), 0 10px 30px rgba(0,0,0,.08);z-index:1001}
   body.sidebar-open .sidebar{transform:translateX(0)}
   .hamburger{display:inline-flex}
-  .sidebar-overlay{
-    position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:1000
-  }
+  .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.15);display:none;z-index:1000}
   body.sidebar-open .sidebar-overlay{display:block}
+  .content{padding:16px}
+  .qr-grid{grid-template-columns:1fr}
 }
-
-/* ====== Password eye (รองรับทั้งมี/ไม่มี .field) ====== */
-.input.password-field{ position:relative; }
-
-/* กรณีใช้ .field ครอบ input */
-.input.password-field .field{ position:relative; }
-.input.password-field .field input{ padding-right:48px; }
-.input.password-field .field .toggle-eye{
-  position:absolute; right:12px; top:50%; transform:translateY(-50%);
-  display:inline-flex; align-items:center; justify-content:center;
-  width:24px; height:24px; background:transparent; border:0; cursor:pointer;
-  color:var(--muted); border-radius:8px; z-index:1;
-}
-.input.password-field .field .toggle-eye .material-symbols-outlined{ font-size:22px; line-height:1; }
-.input.password-field .field .toggle-eye:hover,
-.input.password-field .field .toggle-eye:focus{ color:var(--text); outline:none; }
-
-/* Fallback: ถ้าไม่ได้ใช้ .field ให้วางปุ่มตาใต้ .password-field โดยตรงก็จัดตำแหน่งให้ */
-.input.password-field > input{ padding-right:48px; }
-.input.password-field > .toggle-eye{
-  position:absolute; right:12px; top:50%; transform:translateY(-50%);
-  display:inline-flex; align-items:center; justify-content:center;
-  width:24px; height:24px; background:transparent; border:0; cursor:pointer;
-  color:var(--muted); border-radius:8px; z-index:1;
-}
-.input.password-field > .toggle-eye .material-symbols-outlined{ font-size:22px; line-height:1; }
-.input.password-field > .toggle-eye:hover,
-.input.password-field > .toggle-eye:focus{ color:var(--text); outline:none; }
