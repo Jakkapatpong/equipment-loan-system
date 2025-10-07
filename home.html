@@ -10,9 +10,10 @@
 
   <script src="js/config.js?v=8"></script>
   <script src="js/app.js?v=8"></script>
-  <script src="js/sidebar.js?v=5"></script>
+  <script src="js/sidebar.js?v=6"></script>
+  <script defer src="js/home.js?v=3"></script>
 </head>
-<body class="ui-v2 light">
+<body class="page-dashboard">
 <div class="container">
   <aside class="sidebar"></aside>
   <main class="main">
@@ -23,162 +24,102 @@
         <strong>Dashboard</strong>
       </div>
       <div class="right">
-        <div class="btn-group">
-          <button class="btn ghost"><span class="material-symbols-outlined" style="vertical-align:middle">upload_file</span> Import CSV</button>
-          <button class="btn ghost"><span class="material-symbols-outlined" style="vertical-align:middle">download</span> Export</button>
-          <button class="btn primary"><span class="material-symbols-outlined" style="vertical-align:middle">add</span> เพิ่มทรัพย์สิน</button>
+        <div class="top-actions">
+          <button class="btn ghost" id="btnImport"><span class="material-symbols-outlined">file_upload</span> Import CSV</button>
+          <button class="btn ghost" id="btnExport"><span class="material-symbols-outlined">file_download</span> Export</button>
+          <button class="btn primary" id="btnAdd"><span class="material-symbols-outlined">add</span> เพิ่มทรัพย์สิน</button>
         </div>
       </div>
     </div>
 
+    <!-- Content -->
     <div class="content">
-      <!-- Metrics -->
-      <div class="grid cols-4">
-        <div class="card metric hoverable">
-          <div class="metric-head">ทรัพย์สินทั้งหมด</div>
-          <div class="metric-body">
-            <div class="metric-num" id="m_total">1,247</div>
-            <div class="metric-sub">+12% จากเดือนที่แล้ว</div>
-            <span class="metric-ic material-symbols-outlined">inventory_2</span>
+      <!-- แถวสรุปตัวเลข 4 กล่อง -->
+      <section class="grid dash-4">
+        <div class="card lift stat">
+          <div class="stat-head">
+            <span>ทรัพย์สินทั้งหมด</span>
+            <span class="material-symbols-outlined mut">inventory_2</span>
+          </div>
+          <div class="stat-value" id="m_total">-</div>
+          <div class="stat-sub" id="m_total_sub"> </div>
+        </div>
+
+        <div class="card lift stat">
+          <div class="stat-head">
+            <span>พร้อมใช้งาน</span>
+            <span class="material-symbols-outlined mut">verified</span>
+          </div>
+          <div class="stat-value" id="m_available">-</div>
+          <div class="stat-sub" id="m_available_sub"> </div>
+        </div>
+
+        <div class="card lift stat">
+          <div class="stat-head">
+            <span>กำลังใช้งาน</span>
+            <span class="material-symbols-outlined mut">deployed_code</span>
+          </div>
+          <div class="stat-value" id="m_inuse">-</div>
+          <div class="stat-sub" id="m_inuse_sub"> </div>
+        </div>
+
+        <div class="card lift stat dangerish">
+          <div class="stat-head">
+            <span>เลยกำหนด</span>
+            <span class="material-symbols-outlined mut">error</span>
+          </div>
+          <div class="stat-value" id="m_overdue">0</div>
+          <div class="stat-sub">ต้องติดตามด่วน</div>
+        </div>
+      </section>
+
+      <!-- รายการล่าสุด + ภาพรวมแผนก -->
+      <section class="grid cols-2 gap-16">
+        <div class="card lift">
+          <div class="card-head">
+            <div class="title"><span class="material-symbols-outlined">bolt</span> รายการล่าสุด (10 รายการ)</div>
+          </div>
+          <div id="latest_list" class="list slim">
+            <!-- แทรกรายการด้วย JS -->
+          </div>
+          <div class="card-foot right">
+            <button class="btn ghost" id="btnMore">ดูทั้งหมด</button>
           </div>
         </div>
 
-        <div class="card metric hoverable">
-          <div class="metric-head">พร้อมใช้งาน</div>
-          <div class="metric-body">
-            <div class="metric-num" id="m_available">892</div>
-            <div class="metric-sub">71.5% ของทั้งหมด</div>
-            <span class="metric-ic material-symbols-outlined">verified</span>
-          </div>
-        </div>
-
-        <div class="card metric hoverable">
-          <div class="metric-head">กำลังใช้งาน</div>
-          <div class="metric-body">
-            <div class="metric-num" id="m_inuse">324</div>
-            <div class="metric-sub">26.0% ของทั้งหมด</div>
-            <span class="metric-ic material-symbols-outlined">assignment_ind</span>
-          </div>
-        </div>
-
-        <div class="card metric danger hoverable">
-          <div class="metric-head">เลยกำหนด</div>
-          <div class="metric-body">
-            <div class="metric-num" id="m_overdue">31</div>
-            <div class="metric-sub">ต้องติดตามด่วน</div>
-            <span class="metric-ic material-symbols-outlined">warning</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Lists -->
-      <div class="grid cols-2">
-        <div class="card hoverable">
-          <div class="card-title with-sub">
-            <div>
-              <div class="title">รายการล่าสุด (10 รายการ)</div>
-              <div class="sub">การโยกย้าย มอบหมาย และส่งคืนทรัพย์สินล่าสุด</div>
-            </div>
-          </div>
-
-          <div id="recent_list" class="timeline">
-            <!-- แสดงตัวอย่างก่อน ถ้าโหลดข้อมูลไม่สำเร็จ -->
-            <div class="titem">
-              <div class="tleft">
-                <span class="badge ok">โอนย้าย</span>
-                <span class="badge ghost">ใช้งานอยู่</span>
-              </div>
-              <div class="tmain">
-                <div class="tname">MacBook Pro 16” (A-0045)</div>
-                <div class="tsub">ผู้รับผิดชอบ: นาย ธีรพงษ์ ใจดี · IT → Marketing</div>
-              </div>
-              <div class="tright muted">2025-01-10 14:30</div>
-            </div>
-          </div>
-
-          <div class="actions center"><button class="btn ghost">ดูทั้งหมด</button></div>
-        </div>
-
-        <div class="card hoverable">
-          <div class="card-title">
-            <div class="title"><span class="material-symbols-outlined" style="vertical-align:middle">apartment</span> ภาพรวมแผนก</div>
+        <div class="card lift">
+          <div class="card-head">
+            <div class="title"><span class="material-symbols-outlined">corporate_fare</span> ภาพรวมแผนก</div>
           </div>
           <div id="dept_list" class="dept-list">
-            <!-- ตัวอย่าง -->
-            <div class="dept-row">
-              <div class="dept-name">IT</div>
-              <div class="dept-sub muted">ผู้รับผิดชอบ: นาย ไอที จัดการ, นางสาว เทค โนโลยี</div>
-              <div class="dept-right">
-                <span class="chip">156 รายการ</span>
-                <span class="chip">12 คนใช้</span>
-              </div>
-            </div>
-            <div class="dept-row">
-              <div class="dept-name">Marketing</div>
-              <div class="dept-sub muted">ผู้รับผิดชอบ: นาง มาร์เก็ต ติง, นางสาว โฆษณา ประชา</div>
-              <div class="dept-right">
-                <span class="chip">89 รายการ</span>
-                <span class="chip">8 คนใช้</span>
-              </div>
-            </div>
+            <!-- แทรกสรุปแผนกด้วย JS -->
           </div>
-          <div class="actions center"><button class="btn ghost"><span class="material-symbols-outlined" style="vertical-align:middle">assignment</span> รายงานตามแผนก</button></div>
+          <div class="card-foot">
+            <button class="btn ghost"><span class="material-symbols-outlined" style="vertical-align:middle">description</span> รายงานตามแผนก</button>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Quick actions -->
-      <h3 style="margin-top:8px">การดำเนินการด่วน</h3>
-      <div class="grid cols-3">
-        <a class="quick hoverable" href="add-equipment.html">
-          <div class="qicon"><span class="material-symbols-outlined">add_circle</span></div>
-          <div class="qtitle">เพิ่มทรัพย์สิน</div>
-        </a>
-        <a class="quick hoverable" href="#">
-          <div class="qicon"><span class="material-symbols-outlined">upload_file</span></div>
-          <div class="qtitle">Import CSV</div>
-        </a>
-        <a class="quick hoverable" href="print-qr.html">
-          <div class="qicon"><span class="material-symbols-outlined">qr_code_2</span></div>
-          <div class="qtitle">พิมพ์ QR</div>
-        </a>
-      </div>
+      <!-- ทางลัดการทำงาน -->
+      <section class="card lift">
+        <div class="title mb8">การดำเนินการด่วน</div>
+        <div class="quick-grid">
+          <button class="quick lift" id="q_add">
+            <span class="material-symbols-outlined">add_circle</span>
+            <div>เพิ่มทรัพย์สิน</div>
+          </button>
+          <button class="quick lift" id="q_import">
+            <span class="material-symbols-outlined">file_upload</span>
+            <div>Import CSV</div>
+          </button>
+          <button class="quick lift" id="q_export">
+            <span class="material-symbols-outlined">file_download</span>
+            <div>Export รายงาน</div>
+          </button>
+        </div>
+      </section>
     </div>
   </main>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', async () => {
-    requireLogin(null);
-    renderSidebar();
-
-    // ตัวอย่างดึงข้อมูล (เงียบ ๆ ถ้า API ยังไม่พร้อม)
-    try {
-      const eq = await api('equipment_list');      // { ok, data:{items:[]}}
-      const rec = await api('latest_logs');        // { ok, data:[...] } (แล้วแต่ฝั่ง GAS)
-      if (eq?.ok && Array.isArray(eq.data?.items)) {
-        const total = eq.data.items.length;
-        const avail = eq.data.items.filter(x => String(x.status||'').includes('ว่าง')).length;
-        const inuse = total - avail;
-        document.getElementById('m_total').textContent = total.toLocaleString();
-        document.getElementById('m_available').textContent = avail.toLocaleString();
-        document.getElementById('m_inuse').textContent = inuse.toLocaleString();
-      }
-      if (rec?.ok && Array.isArray(rec.data)) {
-        const box = document.getElementById('recent_list');
-        box.innerHTML = rec.data.slice(0,10).map(r => `
-          <div class="titem">
-            <div class="tleft">
-              <span class="badge ${/โอน|ยืม/i.test(r.type)?'ok':'ghost'}">${r.type||'เคลื่อนย้าย'}</span>
-            </div>
-            <div class="tmain">
-              <div class="tname">${r.asset||r.name||'-'}</div>
-              <div class="tsub">${r.detail||''}</div>
-            </div>
-            <div class="tright muted">${r.time||''}</div>
-          </div>`).join('');
-      }
-    } catch(e) { /* no-op */ }
-  });
-</script>
 </body>
 </html>
