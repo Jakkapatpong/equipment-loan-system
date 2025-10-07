@@ -4,63 +4,12 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Login | Equip Manager V2.3</title>
-
   <link href="assets/style.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-
-  <!-- ต้องให้ config.js มาก่อน app.js เสมอ -->
-  <script src="js/config.js?v=7"></script>
-  <script src="js/app.js?v=8"></script>
-
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Prefill remember
-    try{
-      const m = JSON.parse(localStorage.getItem('remember_login') || '{}');
-      if (m.user) document.getElementById('user').value = m.user;
-      if (m.pw)  { document.getElementById('pass').value = m.pw; document.getElementById('rememberPw').checked = true; }
-    }catch(e){}
-
-    // Toggle eye
-    const btn  = document.querySelector('.password-field .toggle-eye');
-    const pass = document.getElementById('pass');
-    if (btn && pass){
-      const icon = btn.querySelector('.material-symbols-outlined');
-      btn.addEventListener('click', () => {
-        const show = pass.type === 'password';
-        pass.type = show ? 'text' : 'password';
-        icon.textContent = show ? 'visibility_off' : 'visibility';
-        btn.setAttribute('aria-pressed', show ? 'true' : 'false');
-        pass.focus();
-      });
-    }
-  });
-
-  async function handleLogin(ev){
-    ev.preventDefault();
-    const u = document.getElementById('user').value.trim();
-    const p = document.getElementById('pass').value;
-
-    try {
-      // ✅ ตอนนี้ api() คืน data ตรง ๆ
-      const data = await api('login', { username: u, password: p });
-      if (!data || !data.token) throw new Error('ไม่พบ token จากเซิร์ฟเวอร์');
-
-      setToken(data.token);
-      setSession({ user: data.user, role: data.role, fullname: data.user });
-
-      // remember
-      const remember = document.getElementById('rememberPw').checked;
-      localStorage.setItem('remember_login', JSON.stringify({ user: u, pw: remember ? p : '' }));
-
-      window.location.href = 'home.html';
-    } catch (e) {
-      alert(e.message || String(e));
-    }
-  }
-  </script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
 </head>
-<body>
+<body class="ui-v2 light">
   <div class="login-wrap">
     <div class="center">
       <div class="brand"><span class="material-symbols-outlined">qr_code_scanner</span> Equip Manager V2.3</div>
@@ -77,9 +26,7 @@
         <label>รหัสผ่าน</label>
         <div class="field">
           <input id="pass" type="password" required autocomplete="current-password">
-          <button type="button" class="toggle-eye" aria-label="แสดง/ซ่อนรหัสผ่าน">
-            <span class="material-symbols-outlined">visibility</span>
-          </button>
+          <button type="button" class="toggle-eye" aria-label="แสดง/ซ่อนรหัสผ่าน"><span class="material-symbols-outlined">visibility</span></button>
         </div>
       </div>
 
@@ -87,10 +34,56 @@
         <label class="check"><input type="checkbox" id="rememberPw"> จดจำผู้ใช้/รหัสผ่านในอุปกรณ์นี้</label>
       </div>
 
-      <div class="actions right">
+      <div class="actions" style="justify-content:flex-end">
         <button class="btn primary" type="submit">Login</button>
       </div>
     </form>
   </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    try{
+      const m = JSON.parse(localStorage.getItem('remember_login') || '{}');
+      if (m.user) document.getElementById('user').value = m.user;
+      if (m.pw)  { document.getElementById('pass').value = m.pw; document.getElementById('rememberPw').checked = true; }
+    }catch(e){}
+
+    const btn = document.querySelector('.password-field .toggle-eye');
+    const pass= document.getElementById('pass');
+    if (btn && pass){
+      const icon = btn.querySelector('.material-symbols-outlined');
+      btn.addEventListener('click', () => {
+        const show = pass.type === 'password';
+        pass.type = show ? 'text' : 'password';
+        icon.textContent = show ? 'visibility_off' : 'visibility';
+        pass.focus();
+      });
+    }
+  });
+
+  async function handleLogin(ev){
+    ev.preventDefault();
+    const u = document.getElementById('user').value.trim();
+    const p = document.getElementById('pass').value;
+
+    try {
+      const res = await api('login', { username: u, password: p });
+      if (!res || !res.ok) throw new Error((res && res.error) || 'เข้าสู่ระบบไม่สำเร็จ');
+
+      const t = res.data && res.data.token;
+      if (!t) throw new Error('ไม่พบ token จากเซิร์ฟเวอร์');
+
+      setToken(t);
+      setSession({ user: res.data.user, role: res.data.role, fullname: res.data.user });
+
+      const remember = document.getElementById('rememberPw').checked;
+      localStorage.setItem('remember_login', JSON.stringify({ user: u, pw: remember ? p : '' }));
+
+      window.location.href = 'home.html';
+    } catch (e) {
+      alert(e.message || String(e));
+    }
+  }
+  </script>
 </body>
 </html>
