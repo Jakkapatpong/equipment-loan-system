@@ -1,151 +1,74 @@
 <!doctype html>
 <html lang="th">
-
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>พิมพ์ QR | Equip V2.3</title>
-
-  <link href="assets/style.css" rel="stylesheet" />
+  <link href="assets/style.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b0c10'/%3E%3Ctext x='50%25' y='56%25' font-size='34' text-anchor='middle' fill='%2355c2da'%3EQR%3C/text%3E%3C/svg%3E">
-
-  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-  <script>
-    if (!window.QRCode) {
-      var s = document.createElement('script');
-      s.src = 'https://unpkg.com/qrcode@1.5.4/build/qrcode.min.js';
-      document.head.appendChild(s);
-    }
-  </script>
-
-  <script src="js/config.js?v=6"></script>
-  <script src="js/app.js?v=6"></script>
-  <script src="js/sidebar.js?v=4"></script>
+  <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/sidebar.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      requireLogin(['admin', 'dev']);
+      requireLogin(['admin','dev']);
       renderSidebar();
-
       const sel = document.getElementById('equipSelect');
-
       const res = await api('equip_list_for_select');
-      if (!res || !res.ok) {
-        alert((res && res.error) || 'โหลดรายการอุปกรณ์ไม่สำเร็จ');
-        return;
+      if (res.ok && Array.isArray(res.data)) {
+        sel.innerHTML = res.data.map(x => `<option value="${x.id}">${x.name} (${x.id})</option>`).join('');
+      } else {
+        alert(res.error || 'โหลดรายการอุปกรณ์ไม่สำเร็จ');
       }
-
-      // รองรับทั้งแบบเดิม (array) และแบบใหม่ {items:[...]}
-      const items = Array.isArray(res.data) ? res.data
-        : (res.data && Array.isArray(res.data.items) ? res.data.items : []);
-
-      if (!items.length) {
-        sel.innerHTML = `<option value="">— ไม่มีข้อมูล —</option>`;
-        return;
-      }
-
-      sel.innerHTML =
-        `<option value="">— เลือกอุปกรณ์ —</option>` +
-        items.map(x => `<option value="${x.id}">${x.name} (${x.id})</option>`).join('');
     });
-
-    async function renderQR() {
+    async function renderQR(){
       const id = document.getElementById('equipSelect').value;
-      if (!id) { alert('กรุณาเลือกอุปกรณ์'); return; }
-      const payload = JSON.stringify({ type: 'EQUIP', id: id });
       const canvas = document.getElementById('qrCanvas');
+      const payload = JSON.stringify({ type:'EQUIP', id:id });
       await QRCode.toCanvas(canvas, payload, { width: 256, margin: 2 });
       document.getElementById('qrPreviewText').textContent = payload;
     }
-    function doPrint() { window.print(); }
+    function doPrint(){ window.print(); }
   </script>
-
-
-  <style>
-    .qr-tools {
-      display: grid;
-      gap: 12px
-    }
-
-    .qr-grid {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 12px
-    }
-
-    .qr-box {
-      background: var(--panel);
-      border: 1px solid var(--stroke);
-      border-radius: 14px;
-      padding: 14px;
-      text-align: center
-    }
-
-    .qr-label {
-      color: var(--muted);
-      font-size: 12px;
-      margin: 8px 0 0
-    }
-
-    @media print {
-
-      .topbar,
-      .sidebar,
-      .btn,
-      .input,
-      select,
-      #qrPreviewText {
-        display: none !important
-      }
-
-      .qr-box {
-        border: none
-      }
-
-      body {
-        background: #fff
-      }
-    }
-  </style>
+  <style>@media print{ .topbar,.sidebar,.btn,.input,select,#qrPreviewText{display:none!important} .qr-box{border:none} body{background:#fff} }</style>
 </head>
-
-<body>
-  <div class="container">
-    <aside class="sidebar"></aside>
-    <main class="main">
-      <div class="topbar">
-        <div class="left">
-          <button class="btn hamburger"><span class="material-symbols-outlined">menu</span></button>
-          <strong>พิมพ์ QR</strong>
-        </div>
-        <div class="user-info">...</div>
+<body class="ui-v2 light">
+<div class="container">
+  <aside class="sidebar"></aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="left">
+        <button class="btn hamburger"><span class="material-symbols-outlined">menu</span></button>
+        <strong>พิมพ์ QR</strong>
       </div>
+      <div class="user-info">...</div>
+    </div>
 
-      <div class="content">
-        <div class="card qr-tools">
+    <div class="content">
+      <div class="card">
+        <div class="controls">
           <div class="input">
             <label>เลือกอุปกรณ์จากรายการ</label>
             <select id="equipSelect"></select>
           </div>
-          <div><button class="btn" onclick="renderQR()">แสดง QR</button></div>
-        </div>
-
-        <div class="qr-grid">
-          <div></div>
-          <div class="qr-box">
-            <canvas id="qrCanvas" width="256" height="256"></canvas>
-            <div class="qr-label" id="qrPreviewText"></div>
-            <div style="margin-top:12px"><button class="btn primary" onclick="doPrint()">
-                <span class="material-symbols-outlined" style="vertical-align:middle">print</span> พิมพ์
-              </button></div>
+          <div class="actions" style="justify-content:flex-end;align-self:end">
+            <button class="btn" onclick="renderQR()">แสดง QR</button>
           </div>
-          <div></div>
         </div>
       </div>
-    </main>
-  </div>
-</body>
 
+      <div class="qr-grid">
+        <div></div>
+        <div class="qr-box">
+          <canvas id="qrCanvas" width="256" height="256"></canvas>
+          <div class="badge info" id="qrPreviewText" style="margin-top:10px">ตัวอย่าง QR Code</div>
+          <div style="margin-top:12px"><button class="btn primary" onclick="doPrint()"><span class="material-symbols-outlined">print</span> พิมพ์</button></div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
 </html>
