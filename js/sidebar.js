@@ -41,27 +41,29 @@
     const sess = (typeof getSession==='function') ? getSession() : {};
     const role = (sess.role || 'user').toLowerCase();
     const items = MENU[role] || MENU.user;
+
     const el = document.querySelector('.sidebar');
     if (!el) return;
 
-    const cur = location.pathname.split('/').pop() || 'home.html';
+    const cur = (location.pathname.split('/').pop() || 'home.html').toLowerCase();
+
     el.innerHTML = `
       <div class="logo-row">
         <div class="logo">
           <span class="material-symbols-outlined">qr_code_scanner</span>
           <span class="label">Equip Manager</span>
         </div>
-        <button class="pin" title="ย่อ/ขยายเมนู">
+        <button class="pin" title="ย่อ/ขยายเมนู" type="button">
           <span class="material-symbols-outlined">chevron_left</span>
         </button>
       </div>
       <nav class="nav">
         ${items.map(it => `
-          <a class="nav-item ${cur===it.href?'active':''}" href="${it.href}" title="${it.text}">
+          <a class="nav-item ${cur===it.href.toLowerCase()?'active':''}" href="${it.href}" title="${it.text}">
             <span class="material-symbols-outlined">${it.icon}</span>
             <span class="label">${it.text}</span>
           </a>`).join('')}
-        <a class="nav-item" href="#" onclick="logout();return false;" title="ออกจากระบบ">
+        <a class="nav-item" href="#" title="ออกจากระบบ" id="__logout_link">
           <span class="material-symbols-outlined">logout</span>
           <span class="label">ออกจากระบบ</span>
         </a>
@@ -93,5 +95,9 @@
     el.querySelectorAll('.nav-item').forEach(a => {
       a.addEventListener('click', () => document.body.classList.remove('sidebar-open'));
     });
+
+    // logout
+    const lg = el.querySelector('#__logout_link');
+    if (lg) lg.addEventListener('click', (ev)=>{ ev.preventDefault(); logout(); });
   };
 })();
