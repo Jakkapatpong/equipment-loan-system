@@ -96,77 +96,83 @@ img{max-width:100%;display:block}
   .content{padding:16px}
   .qr-grid{grid-template-columns:1fr}
 }
-/* === Dashboard (UI v2) === */
-.ui-v2 .btn-group { display:flex; gap:8px; align-items:center; }
 
-/* Hoverable card */
-.card.hoverable{
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.card.hoverable:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(0,0,0,.24);
-  border-color: rgba(85,194,218,.35);
-}
-
-/* Metric cards */
-.metric .metric-head{ color:var(--muted); font-size:12px; margin-bottom:6px; }
-.metric .metric-body{ position:relative; min-height:72px; }
-.metric .metric-num{ font-size:28px; font-weight:800; letter-spacing:.3px; }
-.metric .metric-sub{ color:var(--muted); font-size:12px; margin-top:4px; }
-.metric .metric-ic{
-  position:absolute; right:0; top:-6px;
-  font-size:24px; color:var(--muted); opacity:.9;
-}
-.metric.danger{ border-color:#3a1a1a; }
-.metric.danger .metric-ic{ color:#ff9a9a; }
-
-/* Section titles */
-.card-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.card-title .title{ font-weight:700; }
-.card-title .sub{ color:var(--muted); font-size:12px; margin-top:6px; }
-.card-title.with-sub{ display:block; }
-
-/* Timeline list (recent) */
-.timeline{ display:flex; flex-direction:column; gap:8px; }
-.titem{ display:grid; grid-template-columns:140px 1fr auto; gap:12px; align-items:center; padding:8px 0; border-bottom:1px dashed var(--stroke); }
-.titem:last-child{ border-bottom:0; }
-.tleft .badge{ margin-right:6px; }
-.tname{ font-weight:600; }
-.tsub{ color:var(--muted); font-size:12px; }
-.tright{ font-size:12px; }
-
-/* Dept list */
-.dept-list{ display:flex; flex-direction:column; gap:8px; }
-.dept-row{ display:grid; grid-template-columns: 1fr 2fr auto; gap:12px; align-items:center; padding:10px 0; border-bottom:1px dashed var(--stroke);}
-.dept-row:last-child{ border-bottom:0; }
-.dept-name{ font-weight:700; }
-.dept-right .chip{
-  display:inline-block; padding:4px 8px; border-radius:999px;
-  border:1px solid var(--stroke); font-size:12px; margin-left:6px;
+/* ===== Dashboard (light) ===== */
+.page-dashboard{
+  --bg: #f7f8fb;
+  --panel: #ffffff;
+  --panel-2: #ffffff;
+  --text: #20252d;
+  --muted: #7b8494;
+  --accent: #1f9ed8;
+  --stroke: #e6e8ee;
+  background: var(--bg);
+  color: var(--text);
 }
 
-/* Quick actions */
+.page-dashboard .topbar{
+  background: var(--bg);
+  border-bottom: 1px solid var(--stroke);
+}
+.page-dashboard .topbar .right .top-actions{display:flex; gap:8px}
+
+.mb8{margin-bottom:8px}
+.gap-16{gap:16px}
+
+/* ยกตัวเมื่อชี้ */
+.lift{transition: transform .15s ease, box-shadow .15s ease}
+.lift:hover{ transform: translateY(-2px); box-shadow: 0 8px 24px rgba(16,24,40,.08)}
+
+/* การ์ดในแดชบอร์ด */
+.page-dashboard .card{
+  background:#fff;border:1px solid var(--stroke);border-radius:14px;
+}
+.page-dashboard .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.page-dashboard .card-head .title{display:flex;align-items:center;gap:8px;font-weight:600}
+.page-dashboard .card-foot{margin-top:12px;display:flex;justify-content:flex-end}
+
+/* สรุปตัวเลข 4 กล่อง */
+.dash-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+@media (max-width:1100px){ .dash-4{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:640px){ .dash-4{grid-template-columns:1fr} }
+
+.stat .stat-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:13px}
+.stat .stat-value{font-size:28px;font-weight:800;margin:6px 0 4px}
+.stat .stat-sub{color:var(--muted);font-size:12px}
+.stat.dangerish .stat-value{color:#e74646}
+.mut{color:var(--muted)}
+
+/* รายการล่าสุด */
+.list.slim .list-row{display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--stroke)}
+.list.slim .list-row:last-child{border-bottom:0}
+.list.slim .left .title{font-weight:600}
+.small{font-size:12px}
+
+/* แท็กเล็ก */
+.pill{font-size:12px;background:#eef6ff;border:1px solid #d6e7ff;border-radius:999px;padding:4px 8px}
+.badge{padding:4px 8px;border-radius:999px;font-size:12px}
+.badge.ok{background:#e7f8ee;color:#188c4f}
+.badge.busy{background:#fff2d8;color:#b06b00}
+
+/* ภาพรวมแผนก */
+.dept-list{display:flex;flex-direction:column;gap:8px}
+.dept-row{display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--stroke);border-radius:12px;background:#fff}
+.dept-row:hover{background:#f9fbff}
+
+/* ทางลัด 3 ช่อง */
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:760px){ .quick-grid{grid-template-columns:1fr} }
 .quick{
-  display:flex; align-items:center; justify-content:center; flex-direction:column;
-  background:var(--panel); border:1px solid var(--stroke); border-radius:14px; padding:18px;
-  text-align:center; text-decoration:none; color:var(--text);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;padding:18px;border:1px dashed var(--stroke);border-radius:14px;background:#fff;cursor:pointer
 }
-.quick .qicon .material-symbols-outlined{ font-size:28px; }
-.quick .qtitle{ margin-top:8px; font-weight:600; }
-.quick.hoverable:hover{
-  transform: translateY(-3px);
-  box-shadow: 0 12px 26px rgba(0,0,0,.26);
-  border-color: rgba(85,194,218,.35);
-}
+.quick .material-symbols-outlined{font-size:26px}
+.quick:hover{background:#f7fbff}
 
-/* Responsive */
-@media (max-width: 1180px){
-  .grid.cols-4{ grid-template-columns:repeat(2,1fr); }
-}
-@media (max-width: 720px){
-  .grid.cols-4, .grid.cols-3, .grid.cols-2{ grid-template-columns:1fr; }
-  .titem{ grid-template-columns:1fr; align-items:flex-start; }
-  .dept-row{ grid-template-columns:1fr; }
-}
+/* ปุ่ม ghost ในโทนสว่าง */
+.btn.ghost{background:#fff;border-color:var(--stroke);color:#2d3848}
+.btn.ghost:hover{background:#f7fbff}
+
+/* กริด 2 คอลัมน์ของช่วงกลาง */
+.cols-2{display:grid;grid-template-columns:1fr 1fr}
+@media (max-width:1100px){ .cols-2{grid-template-columns:1fr} }
